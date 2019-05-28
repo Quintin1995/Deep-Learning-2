@@ -1,8 +1,12 @@
 import gym
-env = gym.make('CartPole-v0')
-for i_episode in range(20):
+import universe
+
+
+env = gym.make("LunarLander-v2")
+
+for i_episode in range(5):
     observation = env.reset()
-    for t in range(1000):
+    for t in range(90):
         env.render()
         print(observation)
         action = env.action_space.sample()
