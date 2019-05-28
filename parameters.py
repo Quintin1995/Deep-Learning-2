@@ -5,7 +5,7 @@
 MAIN PARAMETERS
 ########### """
 #M stands for main
-M_NUM_GAMES             = 1                             #number of games to be played in total.
+M_NUM_GAMES             = 5                             #number of games to be played in total.
 M_MAX_FRAMES_PER_GAME   = 1000                          #maximum amount of frames allowed per game, after which it will quit that game.
 
 

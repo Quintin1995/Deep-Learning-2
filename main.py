@@ -1,5 +1,4 @@
 import gym
-import universe
 from network import DENSENET
 from parameters import *
 
@@ -13,6 +12,7 @@ model = model.build_model()
 ## [position-x, position-y, velocity-x, velocity-y, lander-angle lander-angular-velocity, leg0-ground-contact(boolean), leg1-ground-contact(boolean)]
 
 env = gym.make("LunarLander-v2")
+
 for i_episode in range(M_NUM_GAMES):
     observation = env.reset()
     for t in range(M_MAX_FRAMES_PER_GAME):
