@@ -9,6 +9,9 @@ model = DENSENET()
 model = model.build_model()
 
 
+#OBSERVATIONS in the game are structured like this:
+## [position-x, position-y, velocity-x, velocity-y, lander-angle lander-angular-velocity, leg0-ground-contact(boolean), leg1-ground-contact(boolean)]
+
 env = gym.make("LunarLander-v2")
 for i_episode in range(M_NUM_GAMES):
     observation = env.reset()
