@@ -30,7 +30,7 @@ def run_experiment(amount_actions, num_observations_state):
             q_learning_agent.store_in_memory(state, action, reward, next_state, is_game_done)
             state = next_state
             if is_game_done:
-                print("Game Number: {} of {}, Total Reward: {}, e: {:.2}".format(game_iterator, M_NUM_GAMES, frame_iterator, q_learning_agent.epsilon_max))
+                print("Game Number: {} of {}, Reward: {}, exploration: {:.3}".format(game_iterator, M_NUM_GAMES, frame_iterator, q_learning_agent.epsilon_max))
                 break
             if len(q_learning_agent.state_list) > M_PLAY_BATCH_SIZE:
                 q_learning_agent.replay_from_memory(M_PLAY_BATCH_SIZE, num_observations_state)
@@ -47,6 +47,7 @@ env = gym.make("LunarLander-v2")
 ## [position-x, position-y, velocity-x, velocity-y, lander-angle, lander-angular-velocity, leg0-ground-contact(boolean), leg1-ground-contact(boolean)]
 
 print("Welcome to the game Lunar Lander Version-2!!!")
+print("Games to be played")
 
 amount_actions = env.action_space.n
 num_observations_state  = env.observation_space.shape[0]
