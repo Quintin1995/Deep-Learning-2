@@ -25,6 +25,8 @@ N_METRICS               = ['accuracy']                  #metric to track perform
 N_HIDDEN_UNIT_COUNT     = 32                            #amount of hidden neurons in each hidden layer.
 N_DROPOUT_RATE          = 0.5                           #amount of dropout after each hidden layer
 N_OUTPUT_NEURONS        = 4                             #number of output neurons, which should correspond to the number of actions possible in each state of the game
+N_MODEL_FILE_PATH       = 'saved_models/'               #path for saving the model
+N_MODEL_FILE_NAME       = 'model.h5'                    #file name for saving the model
 
 
 """ #############

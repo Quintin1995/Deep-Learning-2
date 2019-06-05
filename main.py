@@ -3,6 +3,7 @@ from network import DENSENET
 from agent import Agent
 from parameters import *
 import numpy as np
+import os
 
 
 #run a q-learning experiment
@@ -36,6 +37,7 @@ def run_experiment(amount_actions, num_observations_state):
                 q_learning_agent.replay_from_memory(M_PLAY_BATCH_SIZE, num_observations_state)
         q_learning_agent.update_epsilon_greedy()
     env.close()
+    q_learning_agent.model.save(N_MODEL_FILE_PATH + N_MODEL_FILE_NAME)
 
 
 ##########################
@@ -52,6 +54,10 @@ print("Games to be played")
 
 amount_actions = env.action_space.n
 num_observations_state  = env.observation_space.shape[0]
+
+#create model save path if does not exist yet
+if not os.path.exists(N_MODEL_FILE_PATH):
+    os.mkdir(N_MODEL_FILE_PATH)
 
 #create a q-learning agent
 q_learning_agent = Agent(amount_actions, num_observations_state)
