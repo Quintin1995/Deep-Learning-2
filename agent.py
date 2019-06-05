@@ -70,4 +70,3 @@ class Agent:
             #train the network of the current state on the new target of the current state
             target_current_state[0][action] = target
             self.model.fit(state, target_current_state, epochs=1, verbose=0)
-            self.update_epsilon_greedy()

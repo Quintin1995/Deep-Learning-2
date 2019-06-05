@@ -34,6 +34,7 @@ def run_experiment(amount_actions, num_observations_state):
                 break
             if len(q_learning_agent.state_list) > M_PLAY_BATCH_SIZE:
                 q_learning_agent.replay_from_memory(M_PLAY_BATCH_SIZE, num_observations_state)
+        q_learning_agent.update_epsilon_greedy()
     env.close()
 
 
