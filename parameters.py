@@ -7,9 +7,20 @@ MAIN PARAMETERS
 #M stands for main
 M_NUM_GAMES             = 50                            #number of games to be played in total.
 M_MAX_FRAMES_PER_GAME   = 200                           #maximum amount of frames allowed per game, after which it will quit that game.
+M_NUM_GAMES             = 200                            #number of games to be played in total.
+M_MAX_FRAMES_PER_GAME   = 500                           #maximum amount of frames allowed per game, after which it will quit that game.
 M_DO_RENDER_GAME        = True                          #set to true if you want to see the visuals of the game
 M_PLAY_BATCH_SIZE       = 8                             #an agent replays this many state  games from strored states. size of how many games are played
-M_RENDER_GAME_MODULO    = 10                            # Render every Nth game
+M_RENDER_GAME_MODULO    = 1                            # Render every Nth game
+
+
+""" ##########
+RESULTS PARAMETERS
+############## """
+#R stands for results
+R_AVG_RANGE     = 10                            # Take the average result over N individual game results
+R_PLOTS_PATH    = 'plots/'                      # Directory to place the plots in
+R_PLOTS_FILE    = 'reward_results.eps'          # File name for result plots
 
 """ ##########
 NETWORK PARAMS
