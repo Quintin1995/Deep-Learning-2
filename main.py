@@ -19,12 +19,6 @@ def run_experiment(amount_actions, num_observations_state):
             action = q_learning_agent.perform_action(state)
             next_state, reward, is_game_done, _ = env.step(action)
 
-            #penalize for ending the game
-            if not is_game_done:
-                reward = reward
-            else:
-                reward = -10
-
             next_state = np.reshape(next_state, [1, num_observations_state])
             state      = np.reshape(state, [1, num_observations_state])
 
