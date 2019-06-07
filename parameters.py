@@ -9,7 +9,7 @@ M_NUM_GAMES             = 50                            #number of games to be p
 M_MAX_FRAMES_PER_GAME   = 200                           #maximum amount of frames allowed per game, after which it will quit that game.
 M_DO_RENDER_GAME        = True                          #set to true if you want to see the visuals of the game
 M_PLAY_BATCH_SIZE       = 8                             #an agent replays this many state  games from strored states. size of how many games are played
-
+M_RENDER_GAME_MODULO    = 10                            # Render every Nth game
 
 """ ##########
 NETWORK PARAMS

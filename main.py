@@ -14,7 +14,7 @@ def run_experiment(amount_actions, num_observations_state):
         state = np.reshape(state, [1, num_observations_state])
         for frame_iterator in range(M_MAX_FRAMES_PER_GAME):
             #renders the game if set to true
-            if M_DO_RENDER_GAME:
+            if M_DO_RENDER_GAME and not (game_iterator % M_RENDER_GAME_MODULO):
                 env.render()
             action = q_learning_agent.perform_action(state)
             next_state, reward, is_game_done, _ = env.step(action)
