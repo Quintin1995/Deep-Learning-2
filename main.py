@@ -9,7 +9,7 @@ import os
 #run a q-learning experiment
 def run_experiment(amount_actions, num_observations_state):
     #loop over each game and reset the game environment
-    for game_iterator in range(M_NUM_GAMES):
+    for game_iterator in range(M_NUM_GAMES+1):
         state = env.reset()
         state = np.reshape(state, [1, num_observations_state])
         for frame_iterator in range(M_MAX_FRAMES_PER_GAME):
@@ -25,10 +25,10 @@ def run_experiment(amount_actions, num_observations_state):
             q_learning_agent.store_in_memory(state, action, reward, next_state, is_game_done)
             state = next_state
             if is_game_done:
-                print("Game Number: {} of {}, Reward: {}, exploration: {:.3}".format(game_iterator, M_NUM_GAMES, frame_iterator, q_learning_agent.epsilon_max))
                 break
             if len(q_learning_agent.state_list) > M_PLAY_BATCH_SIZE:
                 q_learning_agent.replay_from_memory(M_PLAY_BATCH_SIZE, num_observations_state)
+        print("Game Number: {} of {}, Reward: {}, exploration: {:.3}".format(game_iterator, M_NUM_GAMES, frame_iterator, q_learning_agent.epsilon_max))
         q_learning_agent.update_epsilon_greedy()
     env.close()
     q_learning_agent.model.save(N_MODEL_FILE_PATH + N_MODEL_FILE_NAME)
