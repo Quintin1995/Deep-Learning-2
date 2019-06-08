@@ -1,5 +1,5 @@
 #Implement Simple CNN and train on character dataset
-from parameters import *
+from dqn.parameters import *
 from keras.models import Sequential
 from keras.layers import Dense, Flatten, Activation, Dropout
 
