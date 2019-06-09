@@ -24,11 +24,11 @@ class DENSENET:
         self.model = Sequential()
         #first layer
         self.model.add(Dense(self.h_hidden_unit_count, activation=self.h_intermediate_act, input_dim=self.h_input_shape))
-        self.model.add(Dropout(self.h_dropout_rate))
+        # self.model.add(Dropout(self.h_dropout_rate))
 
         #second layer
         self.model.add(Dense(self.h_hidden_unit_count, activation=self.h_intermediate_act))
-        self.model.add(Dropout(self.h_dropout_rate))
+        # self.model.add(Dropout(self.h_dropout_rate))
 
         #output layer
         self.model.add(Dense(self.h_output_neurons, activation=self.h_output_act))

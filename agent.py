@@ -11,6 +11,9 @@ class Agent:
         self.model = DENSENET()
         self.model = self.model.build_model()
 
+        self.target_model = DENSENET()
+        self.target_model = self.target_model.build_model()
+
         #set amount actions and amount states for the agent.
         self.amount_actions = amount_actions
         self.amount_states  = amount_states
@@ -61,12 +64,20 @@ class Agent:
         #loop over the total batch 
         for state, action, reward, next_state, is_game_over in batch:
             #reward of winning the game is given by the game itself
-            target = reward
-            if not is_game_over:
+            target = self.target_model.predict(state)
+            if is_game_over:
+                target[0][action] = reward
+            else:
                 #if the game is not over we apply the q-learning formula - Add the reward to the discounted predicted valuation of the next state to become the target valuation of the current state.
-                target = (reward + self.gamma * np.amax(self.model.predict(next_state)[0]))
-            #Determine what the valuation is of the current state.
-            target_current_state = self.model.predict(state)
-            #train the network of the current state on the new target of the current state
-            target_current_state[0][action] = target
-            self.model.fit(state, target_current_state, epochs=1, verbose=0)
+                Q_future = max(self.target_model.predict(next_state)[0])
+                target[0][action] = (reward + self.gamma * Q_future)
+            
+            self.model.fit(state, target, epochs=1, verbose=0) 
+
+    # Copies model weights into target_model weights
+    def target_train (self):
+        weights = self.model.get_weights()
+        target_weights = self.target_model.get_weights()
+        for i in range (len(target_weights)):
+            target_weights[i] = weights[i]
+        self.target_model.set_weights(target_weights)
