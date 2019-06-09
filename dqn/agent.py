@@ -1,8 +1,8 @@
 from collections import *
-from network import DENSENET
+from dqn.network import DENSENET
 import numpy as np
 import random
-from parameters import *
+from dqn.parameters import *
 
 
 class Agent:
