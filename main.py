@@ -1,33 +1,40 @@
 # Base imports
 import argparse
 
-from dqn.main_dqn import *
+import dqn
 # import other frameworks here
 
 valid_alg = [
-	'dqn',
-	'a3c',
-	'pdqn']
+    'dqn',
+    'a3c',
+    'pdqn']
 
 def main():
-	parser = argparse.ArgumentParser()
-	mutex1 = parser.add_mutually_exclusive_group()
-	# This means we can now either train or validate. Validate is just here so we can have single letter options because train and test start with the same letter
-	mutex1.add_argument('-t',type=str,help="Flag for training one of the methods. Takes one positional argument (being the name of the method).")
-	mutex1.add_argument('-v',type=str,help="Flag for validation/testing one of the methods. Takes one positional argument.")
-	parser.add_argument('--norender',help="Disables rendering the game during training/testing so we can run it on peregrine.",action='store_true')
-	args = parser.parse_args()
-	if args.t:
-		# training
-		if args.t == 'dqn':
-			# deep q network training sequence here
-		elif args.t == 'a3c':
-			# asynchonous advantage actor critic training here
-		elif args.t == 'pdqn':
-			# prioroty dqn training here (is that what its called?)	
-	elif args.v:
-		# testing
-	elif not args.t and not args.v:
-		print("Please specify if you wish to perform training or validation and provide a valid algorithm to train or test with. Valid algorithms:")
-		for i in valid_alg:
-			print(i)
+    parser = argparse.ArgumentParser()
+    mutex1 = parser.add_mutually_exclusive_group()
+    # This means we can now either train or validate. Validate is just here so we can have single letter options because train and test start with the same letter
+    mutex1.add_argument('-t',type=str,help="Flag for training one of the methods. Takes one positional argument (being the name of the method).")
+    mutex1.add_argument('-v',type=str,help="Flag for validation/testing one of the methods. Takes one positional argument.")
+    parser.add_argument('--norender',help="Disables rendering the game during training/testing so we can run it on peregrine.",action='store_true')
+    args = parser.parse_args()
+    if args.t:
+        # training
+        if args.t == 'dqn':
+            deepQ = dqn.DQN()
+            deepQ.run_experiment()
+        elif args.t == 'a3c':
+            pass
+            # asynchonous advantage actor critic training here
+        elif args.t == 'pdqn':
+            pass
+            # prioroty dqn training here (is that what its called?)
+    elif args.v:
+        pass
+        # testing
+    elif not args.t and not args.v:
+        print("Please specify if you wish to perform training or validation and provide a valid algorithm to train or test with. Valid algorithms:")
+        for i in valid_alg:
+            print(i)
+
+
+main()

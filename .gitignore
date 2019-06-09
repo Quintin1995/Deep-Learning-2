@@ -2,3 +2,5 @@ venv
 .vscode/
 __pycache__
 saved_models/
+.idea/
+plots/
