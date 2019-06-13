@@ -48,3 +48,4 @@ Q_DECAY_EPSILON         = 0.999                         #The maximum epsilon val
 Q_MAX_STATES_RETAINED   = 1000                          #The maximum number of states stored in the agents state memory list
 Q_GAMMA                 = 0.99                          #The discount value of state. How much the valuation of state is discounted. Gamma determines the importance of future rewards.
 Q_LEARNING_RATE         = 0.001                         #Learning rate for the q-learning algorithm
+P_TAU                   = 1.0
