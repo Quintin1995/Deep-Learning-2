@@ -1,7 +1,7 @@
 #Implement Simple CNN and train on character dataset
 from parameters import *
 from keras.models import Sequential
-from keras.layers import Dense, Flatten, Activation, Dropout
+from keras.layers import Dense, Flatten, Activation, Dropout, Input
 import numpy as np, gym, sys, copy, argparse
 from keras.layers import *
 from keras.optimizers import Adam
@@ -12,10 +12,10 @@ from collections import deque
 from pathlib import Path
 import keras
 from keras import backend as K_back
+import keras.backend as K
 from gym.wrappers import Monitor
 import pickle
 import os
-
 
 class DENSENET: 
 
@@ -58,9 +58,10 @@ class DENSENET:
 class QNetwork():
 
 	def __init__(self, env, model_type=None):
-		self.learning_rate=0.0001														#######Hyperparameter
-		self.obs_space=env.observation_space.shape[0]
-		self.ac_space=env.action_space.n		
+		self.learning_rate =0.0001														#######Hyperparameter
+		self.obs_space     =env.observation_space.shape[0]
+		self.ac_space      =env.action_space.n
+		self.model_type    = model_type
 		
 		if(model_type=='DQN'):
 			print("Building DQN model")
@@ -71,6 +72,9 @@ class QNetwork():
 		elif(model_type=='Dueling' or model_type=='dueling'):
 			print("Dueling  Model")
 			self.model=self.build_model_dueling()
+		elif(model_type=='Dueling2' or model_type=='dueling2'):
+			print("Dueling  Model2")
+			self.model=self.build_model_dueling_second()
 		else:
 			print("Incorrect Model")
 			assert 0==1
@@ -123,3 +127,12 @@ class QNetwork():
 		final_model.compile(loss='mean_squared_error',optimizer=Adam(lr=self.learning_rate))
 		return final_model
 	
+	def build_model_dueling_second(self):
+		inp = Input((self.obs_space))
+		x   = Dense(64, activation = 'relu')(inp)
+		x   = Dense(64, activation = 'relu')(x)
+		if(self.model_type == "dueling2"):
+			x = Dense(self.ac_space + 1, activation='linear')(x)
+			x = Lambda(lambda i: K.expand_dims(i[:,0], -1) + i[:,1:] - K.mean(i[:,1:], keepdims=True), output_shape=(self.ac_space,))(x)
+		x = Dense(self.ac_space, activation='linear')(x)
+		return Model(inp,x)

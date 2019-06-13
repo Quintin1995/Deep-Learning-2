@@ -8,10 +8,10 @@ from advantage import value_and_advantage
 class Agent:
     def __init__(self, amount_actions, amount_states, env):
         #create and build the denseNet model for the agent
-        self.model = QNetwork(env,model_type='dueling')
+        self.model = QNetwork(env,model_type="dueling")
         self.model = self.model.model
 
-        self.target_model = QNetwork(env,model_type='dueling')
+        self.target_model = QNetwork(env,model_type="dueling")
         self.target_model = self.target_model.model
 
         #set amount actions and amount states for the agent.
@@ -104,13 +104,15 @@ class Agent:
         for state, action, reward, next_state, is_game_over in batch:
             #reward of winning the game is given by the game itself
             q_val   = self.model.predict(state)
-            q_target= self.target_model.predict(next_state)
+            q_target= self.target_model.predict(next_state)[0]
 
             if is_game_over:
                 q_val[0][action] = reward
             else:
                 #if the game is not over we apply the q-learning formula - Add the reward to the discounted predicted valuation of the next state to become the target valuation of the current state.
-                next_best_action = np.argmax(self.model.predict(next_state)[0])
+                q_next = self.model.predict(next_state)
+                q_next = q_next[0]
+                next_best_action = np.argmax(q_next)
                 q_val[0][action] = (reward + self.gamma * q_target[next_best_action])
                 
             states_batch[idx] = state

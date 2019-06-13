@@ -6,6 +6,8 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 
+DOUBLE_NETWORK = True
+
 # Plots the average reward
 def plot_results(avg_reward_list, name=R_PLOTS_FILE):
         # Plot Rewards
@@ -37,8 +39,11 @@ def run_experiment(amount_actions, num_observations_state):
             q_learning_agent.store_in_memory(state, action, reward, next_state, is_game_done)
             state = next_state
 
-            if len(q_learning_agent.state_list) > M_PLAY_BATCH_SIZE and frame_iterator % 8 == 0:
-                q_learning_agent.replay_from_memory(M_PLAY_BATCH_SIZE, num_observations_state)
+            if len(q_learning_agent.state_list) > M_PLAY_BATCH_SIZE and frame_iterator % 5 == 0:
+                if DOUBLE_NETWORK:
+                    q_learning_agent.replay_from_memory_double(M_PLAY_BATCH_SIZE, num_observations_state)
+                else:
+                    q_learning_agent.replay_from_memory(M_PLAY_BATCH_SIZE, num_observations_state)
                 q_learning_agent.transfer_weights()
             tot_reward += reward
 
