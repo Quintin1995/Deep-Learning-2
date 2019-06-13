@@ -37,11 +37,9 @@ def run_experiment(amount_actions, num_observations_state):
             q_learning_agent.store_in_memory(state, action, reward, next_state, is_game_done)
             state = next_state
 
-            if len(q_learning_agent.state_list) > M_PLAY_BATCH_SIZE:
+            if len(q_learning_agent.state_list) > M_PLAY_BATCH_SIZE and frame_iterator % 15 == 0:
                 q_learning_agent.replay_from_memory(M_PLAY_BATCH_SIZE, num_observations_state)
             tot_reward += reward
-        
-            q_learning_agent.target_train()
 
             if is_game_done:
                 break
@@ -83,6 +81,6 @@ if not os.path.exists(N_MODEL_FILE_PATH):
     os.mkdir(N_MODEL_FILE_PATH)
 
 #create a q-learning agent
-q_learning_agent = Agent(amount_actions, num_observations_state)
+q_learning_agent = Agent(amount_actions, num_observations_state, env)
 
 run_experiment(amount_actions, num_observations_state)

@@ -1,18 +1,15 @@
 from collections import *
-from network import DENSENET
+from network import DENSENET, QNetwork
 import numpy as np
 import random
 from parameters import *
-
+from advantage import value_and_advantage
 
 class Agent:
-    def __init__(self, amount_actions, amount_states):
+    def __init__(self, amount_actions, amount_states, env):
         #create and build the denseNet model for the agent
-        self.model = DENSENET()
-        self.model = self.model.build_model()
-
-        self.target_model = DENSENET()
-        self.target_model = self.target_model.build_model()
+        self.model = QNetwork(env,model_type='dueling')
+        self.model = self.model.model
 
         #set amount actions and amount states for the agent.
         self.amount_actions = amount_actions
@@ -62,22 +59,23 @@ class Agent:
     def replay_from_memory(self, batch_size, num_observations_state):
         batch = random.sample(self.state_list, batch_size)
         #loop over the total batch 
+        states_batch = np.zeros((batch_size, num_observations_state))
+        target_batch = np.zeros((batch_size, 4))
+
+        idx = 0
+
         for state, action, reward, next_state, is_game_over in batch:
             #reward of winning the game is given by the game itself
-            target = self.target_model.predict(state)
+            target = self.model.predict(state)
             if is_game_over:
                 target[0][action] = reward
             else:
                 #if the game is not over we apply the q-learning formula - Add the reward to the discounted predicted valuation of the next state to become the target valuation of the current state.
-                Q_future = max(self.target_model.predict(next_state)[0])
+                Q_future = max(self.model.predict(next_state)[0])
                 target[0][action] = (reward + self.gamma * Q_future)
-            
-            self.model.fit(state, target, epochs=1, verbose=0) 
+                
+            states_batch[idx] = state
+            target_batch[idx] = target
+            idx += 1
 
-    # Copies model weights into target_model weights
-    def target_train (self):
-        weights = self.model.get_weights()
-        target_weights = self.target_model.get_weights()
-        for i in range (len(target_weights)):
-            target_weights[i] = weights[i]
-        self.target_model.set_weights(target_weights)
+        self.model.fit(states_batch, target_batch, epochs=1, verbose=0) 
