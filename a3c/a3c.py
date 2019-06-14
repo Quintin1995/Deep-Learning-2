@@ -25,3 +25,4 @@ class A3C:
 		self.global_net = self.buildGlobal()
 		self.actor = # How do we make actor object?
 		self.critic = # How do we build this one?
+
