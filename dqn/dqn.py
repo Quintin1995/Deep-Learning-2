@@ -27,13 +27,14 @@ def onoroff(boolean):
         return bcolors.OFF
 
 class DQN():
-    def __init__(self, dueling=True, use_target_network=True):
+    def __init__(self, dueling=True, use_target_network=True, epochs=5000):
         print("Setting up Lunar Lander environment.")
         self.dueling = dueling
         self.use_target_network = use_target_network
         self.env = gym.make("LunarLander-v2")
         self.num_act = self.env.action_space.n
         self.num_obs = self.env.observation_space.shape[0]
+        self.epochs = epochs
 
         self.print_overview()
 
@@ -52,6 +53,7 @@ class DQN():
         print (bcolors.OKBLUE + "CURRENT SETTINGS" + bcolors.ENDC)
         print ("DUELING:        " + onoroff(self.dueling))
         print ("TARGET NETWORK: " + onoroff(self.use_target_network))
+        print ("EPOCHS:         " + str(self.epochs))
         print ("ACTION SPACE:   " + str(self.num_act))
         print ("OBSERV. SPACE:  " + str(self.num_obs))
         time.sleep(4)
@@ -73,7 +75,7 @@ class DQN():
         reward_list = []
         avg_reward_list = []
         #loop over each game and reset the game environment
-        for game_iterator in range(M_NUM_GAMES):
+        for game_iterator in range(self.epochs):
             state = self.env.reset()
             state = np.reshape(state, [1, num_observations_state])
             is_game_done = False
@@ -102,7 +104,7 @@ class DQN():
 
                 
             self.q_agent.update_epsilon_greedy()
-            print("Game Number: {} of {}, Exploration: {:.2}, Frames Used: {}, Total reward: {}".format(game_iterator, M_NUM_GAMES, self.q_agent.epsilon_max, frame_iterator, tot_reward))
+            print("Game Number: {} of {}, Exploration: {:.2}, Frames Used: {}, Total reward: {}".format(game_iterator, self.epochs, self.q_agent.epsilon_max, frame_iterator, tot_reward))
             
             reward_list.append(tot_reward)
             if (game_iterator+1) % R_AVG_RANGE == 0:

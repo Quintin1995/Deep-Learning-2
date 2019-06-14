@@ -18,11 +18,18 @@ def main():
     parser.add_argument('--norender',help="Disables rendering the game during training/testing so we can run it on peregrine.")
     parser.add_argument('--target', action='store_true', help="Enables frozen weights target network for DQN model.")
     parser.add_argument('--duel', action='store_true',help="Uses a dueling network structure when running with a DQN network.")
+    parser.add_argument('--epochs', type=int, help="Specify amount of epochs to run.")
     args = parser.parse_args()
+
+    # EPOCHS ARG
+    epochs = 5000
+    if args.epochs:
+        epochs = args.epochs
+
     if args.t:
         # training
         if args.t == 'dqn':
-            deepQ = dqn.DQN(dueling=args.duel==True, use_target_network=args.target==True)
+            deepQ = dqn.DQN(dueling=args.duel==True, use_target_network=args.target==True, epochs=epochs)
 
             deepQ.run_experiment()
         elif args.t == 'a3c':
