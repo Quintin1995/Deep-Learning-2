@@ -5,13 +5,13 @@ import random
 from dqn.parameters import *
 
 class Agent:
-    def __init__(self, amount_actions, amount_states, env):
+    def __init__(self, amount_actions, amount_states, mdl_type, env, use_target=False):
         #create and build the denseNet model for the agent
-        self.model = QNetwork(env,model_type="dueling")
+        self.model = QNetwork(env,model_type=mdl_type)
         self.model = self.model.model
-
-        self.target_model = QNetwork(env,model_type="dueling")
-        self.target_model = self.target_model.model
+        if use_target: 
+            self.target_model = QNetwork(env,model_type=mdl_type)
+            self.target_model = self.target_model.model
 
         #set amount actions and amount states for the agent.
         self.amount_actions = amount_actions
