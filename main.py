@@ -19,17 +19,30 @@ def main():
     parser.add_argument('--target', action='store_true', help="Enables frozen weights target network for DQN model.")
     parser.add_argument('--duel', action='store_true',help="Uses a dueling network structure when running with a DQN network.")
     parser.add_argument('--epochs', type=int, help="Specify amount of epochs to run.")
+    parser.add_argument('--memory', type=int, help="Specify amount of experiences we can store at once.")
+    parser.add_argument('--replay_batch_size', type=int, help="Specify amount of experiences to replay per replay session.")
+    parser.add_argument('--replay_modulo', type=int, help="Do experience replay session once every X frames.")
     args = parser.parse_args()
 
-    # EPOCHS ARG
-    epochs = 5000
+    # Defaults:
+    epochs              = 5000
+    memory              = 10000
+    replay_batch_size   = 32
+    replay_modulo       = 5
+
     if args.epochs:
         epochs = args.epochs
+    if args.memory:
+        memory = args.memory
+    if args.replay_batch_size:
+        replay_batch_size = args.replay_batch_size
+    if args.replay_modulo:
+        replay_modulo = args.replay_modulo
 
     if args.t:
         # training
         if args.t == 'dqn':
-            deepQ = dqn.DQN(dueling=args.duel==True, use_target_network=args.target==True, epochs=epochs)
+            deepQ = dqn.DQN(dueling=args.duel==True, use_target_network=args.target==True, epochs=epochs, memory=memory, replay_batch_size=replay_batch_size, replay_modulo=replay_modulo)
 
             deepQ.run_experiment()
         elif args.t == 'a3c':

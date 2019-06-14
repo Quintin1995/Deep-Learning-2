@@ -5,7 +5,7 @@ import random
 from dqn.parameters import *
 
 class Agent:
-    def __init__(self, amount_actions, amount_states, mdl_type, env, use_target=False):
+    def __init__(self, amount_actions, amount_states, mdl_type, env, use_target=False, memory=10000):
         #create and build the denseNet model for the agent
         self.model = QNetwork(env,model_type=mdl_type)
         self.model = self.model.model
@@ -26,7 +26,7 @@ class Agent:
         self.learning_rate  = Q_LEARNING_RATE
 
         #create empty training set for the agent.
-        self.state_list = deque(maxlen=Q_MAX_STATES_RETAINED)
+        self.state_list = deque(maxlen=memory)
 
         #used in the q-learning formula as the discount rate
         self.gamma = Q_GAMMA

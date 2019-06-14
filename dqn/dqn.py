@@ -27,7 +27,7 @@ def onoroff(boolean):
         return bcolors.OFF
 
 class DQN():
-    def __init__(self, dueling=True, use_target_network=True, epochs=5000):
+    def __init__(self, dueling=True, use_target_network=True, epochs=5000, memory=10000, replay_batch_size=32, replay_modulo=5):
         print("Setting up Lunar Lander environment.")
         self.dueling = dueling
         self.use_target_network = use_target_network
@@ -35,6 +35,9 @@ class DQN():
         self.num_act = self.env.action_space.n
         self.num_obs = self.env.observation_space.shape[0]
         self.epochs = epochs
+        self.memory = memory
+        self.replay_batch_size = replay_batch_size
+        self.replay_modulo = replay_modulo
 
         self.print_overview()
 
@@ -42,7 +45,7 @@ class DQN():
             mdl_type = 'dueling'
         else:
             mdl_type = 'DQN'
-        self.q_agent = Agent(self.num_act,self.num_obs, mdl_type, self.env, use_target=use_target_network)
+        self.q_agent = Agent(self.num_act,self.num_obs, mdl_type, self.env, use_target=use_target_network, memory=self.memory)
         # Create save folder for plots if it does not yet exist
         if not os.path.exists(R_PLOTS_PATH):
             os.mkdir(R_PLOTS_PATH)
@@ -54,6 +57,9 @@ class DQN():
         print ("DUELING:        " + onoroff(self.dueling))
         print ("TARGET NETWORK: " + onoroff(self.use_target_network))
         print ("EPOCHS:         " + str(self.epochs))
+        print ("REPLAY MEM.:    " + str(self.memory))
+        print ("REPLAY B. SIZE: " + str(self.replay_batch_size))
+        print ("REPLAY MODULO:  " + str(self.replay_modulo))
         print ("ACTION SPACE:   " + str(self.num_act))
         print ("OBSERV. SPACE:  " + str(self.num_obs))
         time.sleep(4)
@@ -91,12 +97,12 @@ class DQN():
                 self.q_agent.store_in_memory(state, action, reward, next_state, is_game_done)
                 state = next_state
 
-                if len(self.q_agent.state_list) > M_PLAY_BATCH_SIZE and frame_iterator % 5 == 0:
+                if len(self.q_agent.state_list) > self.replay_batch_size and frame_iterator % self.replay_modulo == 0:
                     if self.use_target_network:
-                        self.q_agent.replay_from_memory_double(M_PLAY_BATCH_SIZE, num_observations_state)
+                        self.q_agent.replay_from_memory_double(self.replay_batch_size, num_observations_state)
                         self.q_agent.transfer_weights()
                     else:
-                        self.q_agent.replay_from_memory(M_PLAY_BATCH_SIZE, num_observations_state)
+                        self.q_agent.replay_from_memory(self.replay_batch_size, num_observations_state)
                 tot_reward += reward
 
                 if is_game_done:
