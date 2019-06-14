@@ -45,7 +45,7 @@ Q_LEARNING PARAMS
 Q_MAX_EPSILON           = 1.0                           #maximum value for a random action in the search space
 Q_MIN_EPSILON           = 0.1                          #minimum probability for a random chance in search space (example if 0.05, then there is a 5% chance of taking an exploratory move)
 Q_DECAY_EPSILON         = 0.999                         #The maximum epsilon value is multiplied by this number to get a lower epsilon value. (so less chance of a exploratory move happing as max epsilon decreases)
-Q_MAX_STATES_RETAINED   = 1000                          #The maximum number of states stored in the agents state memory list
+Q_MAX_STATES_RETAINED   = 10000                          #The maximum number of states stored in the agents state memory list
 Q_GAMMA                 = 0.99                          #The discount value of state. How much the valuation of state is discounted. Gamma determines the importance of future rewards.
 Q_LEARNING_RATE         = 0.001                         #Learning rate for the q-learning algorithm
 P_TAU                   = 1.0

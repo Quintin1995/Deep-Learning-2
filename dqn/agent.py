@@ -1,9 +1,8 @@
 from collections import *
-from network import DENSENET, QNetwork
+from dqn.network import DENSENET, QNetwork
 import numpy as np
 import random
-from parameters import *
-from advantage import value_and_advantage
+from dqn.parameters import *
 
 class Agent:
     def __init__(self, amount_actions, amount_states, env):
