@@ -8,13 +8,13 @@ class Worker(threading.Thread):
 	save_lock = threading.Lock()
 
 	def __init__(self,
-							 state_size,
-							 action_size,
-							 global_model,
-							 opt,
-							 result_queue,
-							 idx,
-							 save_dir='/tmp'):
+					state_size,
+					action_size,
+					global_model,
+					opt,
+					result_queue,
+					idx,
+					save_dir='/tmp'):
 		super(Worker, self).__init__()
 		self.state_size = state_size
 		self.action_size = action_size
@@ -24,8 +24,8 @@ class Worker(threading.Thread):
 		self.local_model = ActorCriticModel(self.state_size, self.action_size)
 		self.worker_idx = idx
 		self.max_q_size = 100000
-		self.traffic_map = Map(self.max_q_size)
-		self.env = self.traffic_map
+		#self.traffic_map = Map(self.max_q_size)
+		self.env = gym.make("Breakout-v0")
 		self.save_dir = save_dir
 		self.ep_loss = 0.0
 
@@ -98,15 +98,14 @@ class Worker(threading.Thread):
 					# variables involved in computing the loss by using tf.GradientTape
 					with tf.GradientTape() as tape:
 						total_loss = self.compute_loss(done,
-																					 new_state,
-																					 mem,
-																					 args.gamma)
+														new_state,
+														mem,
+														args.gamma)
 					self.ep_loss += total_loss
 					# Calculate local gradients
 					grads = tape.gradient(total_loss, self.local_model.trainable_weights)
 					# Push local gradients to global model
-					self.opt.apply_gradients(zip(grads,
-																			 self.global_model.trainable_weights))
+					self.opt.apply_gradients(zip(grads,self.global_model.trainable_weights))
 					# Update local model with new weights
 					self.local_model.set_weights(self.global_model.get_weights())
 
@@ -146,10 +145,10 @@ class Worker(threading.Thread):
 
 		self.result_queue.put(None)
 		def compute_loss(self,
-											 done,
-											 new_state,
-											 memory,
-											 gamma=0.99):
+							done,
+							new_state,
+							memory,
+							gamma=0.99):
 				if done:
 					reward_sum = 0.  # terminal
 				else:
@@ -178,7 +177,7 @@ class Worker(threading.Thread):
 				entropy = tf.nn.softmax_cross_entropy_with_logits_v2(labels=policy, logits=logits)
 
 				policy_loss = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=memory.actions,
-																																		 logits=logits)
+																				logits=logits)
 				policy_loss *= tf.stop_gradient(advantage)
 				policy_loss -= 0.01 * entropy
 				total_loss = tf.reduce_mean((0.5 * value_loss + policy_loss))
