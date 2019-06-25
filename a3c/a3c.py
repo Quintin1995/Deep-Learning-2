@@ -4,7 +4,6 @@ import os
 import threading
 import multiprocessing
 import gym
-from random import choice, randint
 from queue import Queue
 import tensorflow as tf
 
@@ -35,11 +34,11 @@ class MasterAgent():
 	def train(self):
 		res_queue = Queue()
 		workers = [Worker(self.state_size,
-											self.action_size,
-											self.global_model,
-											self.opt, res_queue,
-											i,
-											save_dir=self.save_dir) for i in range(multiprocessing.cpu_count())]
+							self.action_size,
+							self.global_model,
+							self.opt, res_queue,
+							i,
+							save_dir=self.save_dir) for i in range(multiprocessing.cpu_count())]
 
 		for i, worker in enumerate(workers):
 			print("Starting worker {}".format(i))
@@ -58,7 +57,7 @@ class MasterAgent():
 		plt.ylabel('Moving average ep reward')
 		plt.xlabel('Step')
 		plt.savefig(os.path.join(self.save_dir,
-														 '{} Moving Average.png'.format("traffic")))
+									'{} Moving Average.png'.format("traffic")))
 		#plt.show()
 
 	def play(self):

@@ -42,7 +42,7 @@ class ActorCriticNetwork(keras.Model):
 		values = layers.Dense(1)(dense2)
 		return policy_logits, values
 
-	def call(self,inp):
+	def __call__(self,inp):
 		# One forward pass of the network
 		x = self.inp(inp)
 		x = self.conv1(x)
