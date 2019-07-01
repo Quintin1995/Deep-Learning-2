@@ -17,58 +17,19 @@ from gym.wrappers import Monitor
 import pickle
 import os
 
-class DENSENET: 
-
-    def __init__(self):
-        # Define parameters
-        self.h_input_shape      = N_INPUT_DIM                   #number of observations fed into the neural network
-        self.h_intermediate_act = N_INTERMEDIATE_ACT            #activations function used in hidden layers
-        self.h_output_act       = N_OUTPUT_ACT                  #activation used in the output layer
-        self.h_optimizer        = N_OPTIMIZER                   #optimizer used in compilation
-        self.h_loss             = N_LOSS                        #loss functions used in compilation
-        self.h_metrics          = N_METRICS                     #metric to track performance
-        self.h_hidden_unit_count= N_HIDDEN_UNIT_COUNT           #amount of hidden neurons in each hidden layer.
-        self.h_dropout_rate     = N_DROPOUT_RATE                #amount of dropout after each hidden layer
-        self.h_output_neurons   = N_OUTPUT_NEURONS              #number of output neurons, which should correspond to the number of actions possible in each state of the game
-        self.model              = Sequential()
-
-    #build the whole model and return it
-    def build_model(self):
-        self.model = Sequential()
-        #first layer
-        self.model.add(Dense(self.h_hidden_unit_count, activation=self.h_intermediate_act, input_dim=self.h_input_shape))
-        # self.model.add(Dropout(self.h_dropout_rate))
-
-        #second layer
-        self.model.add(Dense(self.h_hidden_unit_count, activation=self.h_intermediate_act))
-        # self.model.add(Dropout(self.h_dropout_rate))
-
-        #output layer
-        self.model.add(Dense(self.h_output_neurons, activation=self.h_output_act))
-
-        #compiling the whole model
-        self.model.compile(loss=self.h_loss, optimizer=self.h_optimizer, metrics=self.h_metrics)
-
-        print("THIS IS THE MODEL SUMMARY:")
-        print(self.model.summary())
-        print("END MODEL SUMMARY.")
-
-        return self.model
 
 class QNetwork():
 
 	def __init__(self, env, model_type=None):
-		self.learning_rate =0.0001														#######Hyperparameter
+		self.learning_rate = 0.0001														#######Hyperparameter
 		self.obs_space     = env.observation_space.shape + (-1,)
-		self.ac_space      =env.action_space.n
+		self.ac_space      = env.action_space.n
 		self.model_type    = model_type
 		
 		if(model_type=='DQN'):
 			print("Building DQN model")
 			self.model=self.build_model_DQN()
-		elif(model_type=='linear' or model_type=='Linear'):
-			print("Building linear model")
-			self.model=self.build_model_linear()
+
 		elif(model_type=='Dueling' or model_type=='dueling'):
 			print("Dueling  Model")
 			self.model=self.build_model_dueling()
@@ -91,6 +52,8 @@ class QNetwork():
 		# Helper funciton to load model weights. 
 		self.model.load_weights(weight_file)
 
+
+	#default DQN, baseline model
 	def build_model_DQN(self):
 		#Builds a DQN
 		model=Sequential()
@@ -112,10 +75,22 @@ class QNetwork():
 		model.summary()
 		return model
 
+
+	#best dueling model
 	def build_model_dueling(self):
-		inp=Input(shape=(self.obs_space,))
-		x=Dense(units=32,activation='relu',kernel_initializer='he_uniform',name='hidden_layer_1')(inp)
-		x=Dense(units=32,activation='relu',kernel_initializer='he_uniform',name='hidden_layer_2')(x)
+		inp = Input(shape=(84, 84, 4))
+		x = Conv2D(32, (5, 5), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last")(inp)
+		x = MaxPooling2D(pool_size=(2, 2))(x)
+		x = Conv2D(32, (5, 5), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last")(x)
+		x = MaxPooling2D(pool_size=(2, 2))(x)
+		x = Conv2D(32, (5, 5), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last")(x)
+		x = MaxPooling2D(pool_size=(2, 2))(x)
+		
+		x = Flatten()(x)
+
+		x = Dense(units=32,activation='relu',kernel_initializer='he_uniform',name='hidden_layer_1')(x)
+		x = Dense(units=32,activation='relu',kernel_initializer='he_uniform',name='hidden_layer_2')(x)
+
 		value_=Dense(units=1,activation='linear',kernel_initializer='he_uniform',name='Value_func')(x)
 		ac_activation=Dense(units=self.ac_space,activation='linear',kernel_initializer='he_uniform',name='action')(x)
 		#Compute average of advantage function
@@ -137,9 +112,19 @@ class QNetwork():
 		final_model.compile(loss='mean_squared_error',optimizer=Adam(lr=self.learning_rate))
 		return final_model
 	
+
 	def build_model_dueling_second(self):
-		inp = Input((self.obs_space))
-		x   = Dense(64, activation = 'relu')(inp)
+		inp = Input(shape=(84, 84, 4))
+		x = Conv2D(32, (5, 5), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last")(inp)
+		x = MaxPooling2D(pool_size=(2, 2))(x)
+		x = Conv2D(32, (5, 5), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last")(x)
+		x = MaxPooling2D(pool_size=(2, 2))(x)
+		x = Conv2D(32, (5, 5), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last")(x)
+		x = MaxPooling2D(pool_size=(2, 2))(x)
+		
+		x = Flatten()(x)
+
+		x   = Dense(64, activation = 'relu')(x)
 		x   = Dense(64, activation = 'relu')(x)
 		if(self.model_type == "dueling2"):
 			x = Dense(self.ac_space + 1, activation='linear')(x)

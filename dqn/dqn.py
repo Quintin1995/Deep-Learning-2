@@ -1,5 +1,4 @@
 import gym
-from dqn.network import DENSENET
 import cv2
 from dqn.agent import Agent
 from dqn.parameters import *

@@ -1,5 +1,5 @@
 from collections import *
-from dqn.network import DENSENET, QNetwork
+from dqn.network import QNetwork
 import numpy as np
 import random
 from dqn.parameters import *
