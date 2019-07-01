@@ -6,6 +6,8 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 import time
+from utils.atari_environment import AtariEnvironment
+from utils.continuous_environments import Environment
 
 
 class bcolors:
@@ -27,25 +29,32 @@ def onoroff(boolean):
         return bcolors.OFF
 
 class DQN():
-    def __init__(self, dueling=True, use_target_network=True, epochs=5000, memory=10000, replay_batch_size=32, replay_modulo=5):
+    def __init__(self, args):
+        
         print("Setting up Lunar Lander environment.")
-        self.dueling = dueling
-        self.use_target_network = use_target_network
-        self.env = gym.make("LunarLander-v2")
-        self.num_act = self.env.action_space.n
-        self.num_obs = self.env.observation_space.shape[0]
-        self.epochs = epochs
-        self.memory = memory
-        self.replay_batch_size = replay_batch_size
-        self.replay_modulo = replay_modulo
+        self.dueling = args.dueling
+        self.use_target_network = args.target
+
+        # self.env = gym.make(args.env)
+
+        self.env = AtariEnvironment(args)
+        self.num_obs = self.env.get_state_size()
+        self.num_act = self.env.get_action_size()
+
+        # self.num_act = self.env.action_space.n
+        # self.num_obs = self.env.observation_space.shape[0]
+        self.epochs = args.epochs
+        self.memory = args.memory
+        self.replay_batch_size = args.replay_batch_size
+        self.replay_modulo = args.replay_modulo
 
         self.print_overview()
 
-        if dueling: 
+        if self.dueling: 
             mdl_type = 'dueling'
         else:
             mdl_type = 'DQN'
-        self.q_agent = Agent(self.num_act,self.num_obs, mdl_type, self.env, use_target=use_target_network, memory=self.memory)
+        self.q_agent = Agent(self.num_act,self.num_obs, mdl_type, self.env, use_target=self.use_target_network, memory=self.memory)
         # Create save folder for plots if it does not yet exist
         if not os.path.exists(R_PLOTS_PATH):
             os.mkdir(R_PLOTS_PATH)
