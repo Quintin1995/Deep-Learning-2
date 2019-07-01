@@ -84,17 +84,17 @@ class DQN():
         return cv2.resize(self.to_greyscale(state), (84, 110))[26:, :]
 
     #concatenate four frames into one frame stack state
-    def collect_states(self, action, env):
-        all_states = np.zeros((84,84,4))
+    def collect_states(self, action):
+        self.env.render()
+        all_states = np.zeros((84,84,4), dtype=np.float16)
         is_game_done = False
         for i in range(4):
             if not is_game_done:
                 next_state, reward, is_game_done, _ = self.env.step(action)
             all_states[:,:,i] = self.state_reshape(next_state)
         o = list()
-        o.append(all_states)
+        o.append(all_states / 255.0)
         return np.asarray(o), reward, is_game_done
-
 
     #run a q-learning experiment
     def run_experiment(self):
@@ -105,7 +105,7 @@ class DQN():
         #loop over each game and reset the game environment
         for game_iterator in range(self.epochs):
             state = self.env.reset()
-            state, reward, is_game_done = self.collect_states(action=0, env=self.env)
+            state, reward, is_game_done = self.collect_states(action=0)
 
             is_game_done = False
             tot_reward, reward = 0,0
@@ -113,7 +113,7 @@ class DQN():
             for frame_iterator in range(M_MAX_FRAMES_PER_GAME):
                 # self.env.render()
                 action = self.q_agent.perform_action(state)
-                next_state, reward, is_game_done = self.collect_states(action=action, env=self.env)
+                next_state, reward, is_game_done = self.collect_states(action=action)
 
                 self.q_agent.store_in_memory(state, action, reward, next_state, is_game_done)
                 state = next_state
