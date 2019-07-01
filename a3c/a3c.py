@@ -1,14 +1,17 @@
 # The main a3c file
 
 import os
+import sys
 import threading
 import multiprocessing
 import gym
 from queue import Queue
 import tensorflow as tf
+import numpy as np
 
 from .parameters import *
 from .network import ActorCriticNetwork
+from .worker import Worker
 
 # Disable GPU if one is detected, this is a CPU only task because of multithreading
 os.environ['CUDA_VISIBLE_DEVICES'] = ''
@@ -29,7 +32,10 @@ class MasterAgent():
 		
 		self.opt = tf.train.AdamOptimizer(A_LEARN_RATE, use_locking=True)
 		self.global_model = ActorCriticNetwork(self.state_size, self.action_size)  # global network
-		self.global_model(tf.convert_to_tensor(np.random.random((1, self.state_size)), dtype=tf.float32))
+		tensor = tf.convert_to_tensor([np.random.random(self.state_size)], dtype=tf.float32)
+		policy, values = self.global_model(tensor)
+		print(policy)
+		print(values)
 
 	def train(self):
 		res_queue = Queue()

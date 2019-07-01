@@ -2,6 +2,7 @@
 import argparse
 
 import dqn
+import a3c
 # import other frameworks here
 
 valid_alg = [
@@ -23,6 +24,8 @@ def main():
             deepQ = dqn.DQN()
             deepQ.run_experiment()
         elif args.t == 'a3c':
+            aaac = a3c.MasterAgent()
+            aaac.train()
             pass
             # asynchonous advantage actor critic training here
         elif args.t == 'pdqn':
