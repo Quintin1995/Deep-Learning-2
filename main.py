@@ -1,7 +1,7 @@
 # Base imports
 import argparse
 
-import dqn
+import dqn.dqn as dqn
 # import other frameworks here
 
 valid_alg = [
@@ -15,12 +15,35 @@ def main():
     # This means we can now either train or validate. Validate is just here so we can have single letter options because train and test start with the same letter
     mutex1.add_argument('-t',type=str,help="Flag for training one of the methods. Takes one positional argument (being the name of the method).")
     mutex1.add_argument('-v',type=str,help="Flag for validation/testing one of the methods. Takes one positional argument.")
-    parser.add_argument('--norender',help="Disables rendering the game during training/testing so we can run it on peregrine.",action='store_true')
+    parser.add_argument('--norender',help="Disables rendering the game during training/testing so we can run it on peregrine.")
+    parser.add_argument('--target', action='store_true', help="Enables frozen weights target network for DQN model.")
+    parser.add_argument('--duel', action='store_true',help="Uses a dueling network structure when running with a DQN network.")
+    parser.add_argument('--epochs', type=int, help="Specify amount of epochs to run.")
+    parser.add_argument('--memory', type=int, help="Specify amount of experiences we can store at once.")
+    parser.add_argument('--replay_batch_size', type=int, help="Specify amount of experiences to replay per replay session.")
+    parser.add_argument('--replay_modulo', type=int, help="Do experience replay session once every X frames.")
     args = parser.parse_args()
+
+    # Defaults:
+    epochs              = 5000
+    memory              = 20000
+    replay_batch_size   = 32
+    replay_modulo       = 5
+
+    if args.epochs:
+        epochs = args.epochs
+    if args.memory:
+        memory = args.memory
+    if args.replay_batch_size:
+        replay_batch_size = args.replay_batch_size
+    if args.replay_modulo:
+        replay_modulo = args.replay_modulo
+
     if args.t:
         # training
         if args.t == 'dqn':
-            deepQ = dqn.DQN()
+            deepQ = dqn.DQN(dueling=args.duel==True, use_target_network=args.target==True, epochs=epochs, memory=memory, replay_batch_size=replay_batch_size, replay_modulo=replay_modulo)
+
             deepQ.run_experiment()
         elif args.t == 'a3c':
             pass
