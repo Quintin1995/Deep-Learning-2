@@ -1,7 +1,7 @@
 #Implement Simple CNN and train on character dataset
 from dqn.parameters import *
 from keras.models import Sequential
-from keras.layers import Dense, Flatten, Activation, Dropout, Input
+from keras.layers import Dense, Flatten, Activation, Dropout, Input, Conv2D
 import numpy as np, gym, sys, copy, argparse
 from keras.layers import *
 from keras.optimizers import Adam
@@ -59,7 +59,7 @@ class QNetwork():
 
 	def __init__(self, env, model_type=None):
 		self.learning_rate =0.0001														#######Hyperparameter
-		self.obs_space     =env.observation_space.shape[0]
+		self.obs_space     = env.observation_space.shape + (-1,)
 		self.ac_space      =env.action_space.n
 		self.model_type    = model_type
 		
@@ -94,12 +94,22 @@ class QNetwork():
 	def build_model_DQN(self):
 		#Builds a DQN
 		model=Sequential()
+		# model.add(Input(self.obs_space))
+		model.add(Conv2D(32, (5, 5), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last", input_shape=(84, 84, 4)))
+		model.add(MaxPooling2D(pool_size=(2, 2)))
+		model.add(Conv2D(32, (5, 5), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last"))
+		model.add(MaxPooling2D(pool_size=(2, 2)))
+		model.add(Conv2D(32, (5, 5), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last"))
+		model.add(MaxPooling2D(pool_size=(2, 2)))
+		model.add(Flatten())
+
 		model.add(Dense(units=24,input_dim=self.obs_space,activation='relu',
 						kernel_initializer='he_uniform'))
 		model.add(Dense(units=24,activation='relu',kernel_initializer='he_uniform'))
 		model.add(Dense(units=self.ac_space,activation='linear',kernel_initializer='he_uniform'))
-		model.summary()
+		# model.build(input_shape=self.obs_space)
 		model.compile(loss='mean_squared_error',optimizer=Adam(lr=self.learning_rate))
+		model.summary()
 		return model
 
 	def build_model_dueling(self):

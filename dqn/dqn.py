@@ -91,7 +91,9 @@ class DQN():
             if not is_game_done:
                 next_state, reward, is_game_done, _ = self.env.step(action)
             all_states[:,:,i] = self.state_reshape(next_state)
-        return all_states, reward, is_game_done
+        o = list()
+        o.append(all_states)
+        return np.asarray(o), reward, is_game_done
 
 
     #run a q-learning experiment

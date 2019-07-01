@@ -67,7 +67,7 @@ class Agent:
     def replay_from_memory(self, batch_size, num_observations_state):
         batch = random.sample(self.state_list, batch_size)
         #loop over the total batch 
-        states_batch = np.zeros((batch_size, num_observations_state))
+        states_batch = np.zeros((batch_size, 84, 84, 4))
         target_batch = np.zeros((batch_size, 4))
 
         idx = 0
@@ -79,7 +79,8 @@ class Agent:
                 target[0][action] = reward
             else:
                 #if the game is not over we apply the q-learning formula - Add the reward to the discounted predicted valuation of the next state to become the target valuation of the current state.
-                Q_future = max(self.model.predict(next_state)[0])
+                prediction = self.model.predict(next_state)
+                Q_future = max(prediction[0])
                 target[0][action] = (reward + self.gamma * Q_future)
                 
             states_batch[idx] = state
