@@ -55,7 +55,8 @@ class Worker(threading.Thread):
 			done = False
 			n_time_steps = 30000 # just set this really high and print out how many it actually took to finish the game
 			for t in range(0, n_time_steps): # change this? I assuem a game of breakout is longer than this
-				print("Worker {} at time step {}".format(self.worker_idx,t))
+				if t % 20 == 0:
+					print("Worker {} at time step {}".format(self.worker_idx,t))
 				current_state = [current_state]
 				logits, _ = self.local_model(
 								tf.convert_to_tensor(current_state,
