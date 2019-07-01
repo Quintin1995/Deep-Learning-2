@@ -1,5 +1,6 @@
 import gym
 from dqn.network import DENSENET
+import cv2
 from dqn.agent import Agent
 from dqn.parameters import *
 import numpy as np
@@ -74,6 +75,10 @@ class DQN():
         plt.savefig(R_PLOTS_PATH+name)     
         plt.close()
 
+
+    def to_greyscale(self, img):
+        return np.mean(img, axis=2).astype(np.uint8)
+
     #run a q-learning experiment
     def run_experiment(self):
         num_observations_state = self.num_obs
@@ -83,7 +88,8 @@ class DQN():
         #loop over each game and reset the game environment
         for game_iterator in range(self.epochs):
             state = self.env.reset()
-            state = np.reshape(state, [1, num_observations_state])
+            
+            state = cv2.resize(self.to_greyscale(state), (84, 110))[26:, :]
             is_game_done = False
             tot_reward, reward = 0,0
 
