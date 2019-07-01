@@ -31,7 +31,7 @@ class DQN():
         print("Setting up Lunar Lander environment.")
         self.dueling = dueling
         self.use_target_network = use_target_network
-        self.env = gym.make("LunarLander-v2")
+        self.env = gym.make("Breakout-v4")
         self.num_act = self.env.action_space.n
         self.num_obs = self.env.observation_space.shape[0]
         self.epochs = epochs
@@ -88,7 +88,7 @@ class DQN():
             tot_reward, reward = 0,0
 
             for frame_iterator in range(M_MAX_FRAMES_PER_GAME):
-                self.env.render()
+                # self.env.render()
                 action = self.q_agent.perform_action(state)
                 next_state, reward, is_game_done, _ = self.env.step(action)
                 next_state = np.reshape(next_state, [1, num_observations_state])
