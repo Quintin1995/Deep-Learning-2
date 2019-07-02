@@ -32,7 +32,7 @@ ACTOR CRITIC PARAMS
 ###########"""
 A_LEARN_RATE			= 0.0001						# Learning rate
 A_GAMMA					= 0.99							# Gamma for Q-parameter
-A_MAX_EPS				= 200							# Number of epochs
+A_MAX_EPS				= 8								# Number of epochs
 A_UPDATE_FREQ			= 20							# Number of time steps between model updates
 
 

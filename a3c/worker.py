@@ -1,8 +1,10 @@
 import threading
+import os
 import multiprocessing  # may be uneccessary, consider a test run with this removed
 import gym
 import tensorflow as tf
 import numpy as np
+
 
 from .network import ActorCriticNetwork
 from .utils import Memory, record
@@ -34,6 +36,7 @@ class Worker(threading.Thread):
 		self.opt = opt
 		self.local_model = ActorCriticNetwork(self.state_size, self.action_size)
 		self.worker_idx = idx
+		#self.local_ep = 0
 		self.max_q_size = 100000
 		#self.traffic_map = Map(self.max_q_size)
 		self.env = gym.make("Breakout-v0")
@@ -45,6 +48,7 @@ class Worker(threading.Thread):
 		total_step = 1
 		mem = Memory()
 		while Worker.global_episode < A_MAX_EPS:
+			#self.local_ep = Worker.global_episode
 			print("Epoch: {0}".format(Worker.global_episode))
 			current_state = self.env.reset()
 			mem.clear()
@@ -53,7 +57,7 @@ class Worker(threading.Thread):
 			self.ep_loss = 0
 			time_count = 0
 			done = False
-			n_time_steps = 30000 # just set this really high and print out how many it actually took to finish the game
+			n_time_steps = 100 # just set this really high and print out how many it actually took to finish the game
 			for t in range(0, n_time_steps): # change this? I assuem a game of breakout is longer than this
 				if t % 20 == 0:
 					print("Worker {} at time step {}".format(self.worker_idx,t))
@@ -108,8 +112,9 @@ class Worker(threading.Thread):
 							os.path.join(self.save_dir,
 													 'model_a3c_{}.h5'.format("breakout"))
 					)
-					Worker.best_score = ep_reward      
+					Worker.best_score = ep_reward
 			Worker.global_episode += 1
+			print("Worker {}, episode reward {}".format(self.worker_idx,ep_reward))
 			
 			# print("Car stats: ", n_cars[0], n_cars[1], self.env.number_of_cars())
 			#print("{0} cars have disappeared".format(n_cars[0] - n_cars[1] - self.env.number_of_cars()))

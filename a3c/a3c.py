@@ -8,6 +8,7 @@ import gym
 from queue import Queue
 import tensorflow as tf
 import numpy as np
+import matplotlib.pyplot as plt
 
 from .parameters import *
 from .network import ActorCriticNetwork
@@ -28,14 +29,10 @@ class MasterAgent():
 		env = gym.make(self.game_name)
 		self.state_size = env.observation_space.shape
 		self.action_size = env.action_space.n
-		print(self.state_size, self.action_size)
-		
 		self.opt = tf.train.AdamOptimizer(A_LEARN_RATE, use_locking=True)
 		self.global_model = ActorCriticNetwork(self.state_size, self.action_size)  # global network
 		tensor = tf.convert_to_tensor([np.random.random(self.state_size)], dtype=tf.float32)
 		policy, values = self.global_model(tensor)
-		print(policy)
-		print(values)
 
 	def train(self):
 		res_queue = Queue()
@@ -44,7 +41,7 @@ class MasterAgent():
 							self.global_model,
 							self.opt, res_queue,
 							i,
-							save_dir=self.save_dir) for i in range(multiprocessing.cpu_count())]
+							save_dir=self.save_dir) for i in range(multiprocessing.cpu_count()-1)]
 
 		for i, worker in enumerate(workers):
 			print("Starting worker {}".format(i))
@@ -53,12 +50,13 @@ class MasterAgent():
 		moving_average_rewards = []  # record episode reward to plot
 		while True:
 			reward = res_queue.get()
+			print("Getting from res_queue")
 			if reward is not None:
 				moving_average_rewards.append(reward)
 			else:
 				break
 		[w.join() for w in workers]
-
+		print(moving_average_rewards)
 		plt.plot(moving_average_rewards)
 		plt.ylabel('Moving average ep reward')
 		plt.xlabel('Step')
