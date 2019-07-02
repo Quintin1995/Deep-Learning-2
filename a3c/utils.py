@@ -48,4 +48,5 @@ def record(episode,
 	)
 	"""
 	result_queue.put(global_ep_reward)
+	print("Putting result in queue.")
 	return global_ep_reward

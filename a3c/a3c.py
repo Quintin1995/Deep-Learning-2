@@ -41,7 +41,7 @@ class MasterAgent():
 							self.global_model,
 							self.opt, res_queue,
 							i,
-							save_dir=self.save_dir) for i in range(multiprocessing.cpu_count()-1)]
+							save_dir=self.save_dir) for i in range(multiprocessing.cpu_count())]
 
 		for i, worker in enumerate(workers):
 			print("Starting worker {}".format(i))
@@ -53,6 +53,8 @@ class MasterAgent():
 			print("Getting from res_queue")
 			if reward is not None:
 				moving_average_rewards.append(reward)
+			elif Worker.global_episode < A_MAX_EPS:
+				continue
 			else:
 				break
 		[w.join() for w in workers]
@@ -60,15 +62,14 @@ class MasterAgent():
 		plt.plot(moving_average_rewards)
 		plt.ylabel('Moving average ep reward')
 		plt.xlabel('Step')
-		plt.savefig(os.path.join(self.save_dir,
-									'{} Moving Average.png'.format("traffic")))
-		#plt.show()
+		plt.savefig(os.path.join(self.save_dir,'{} Moving Average.png'.format("breakout")))
+		plt.show()
 
 	def play(self):
 		env = gym.make(self.game_name).unwrapped
 		state = env.reset()
 		model = self.global_model
-		model_path = os.path.join(self.save_dir, 'model_{}.h5'.format("traffic"))
+		model_path = os.path.join(self.save_dir, 'model_{}.h5'.format("breakout"))
 		print('Loading model from: {}'.format(model_path))
 		model.load_weights(model_path)
 		done = False
