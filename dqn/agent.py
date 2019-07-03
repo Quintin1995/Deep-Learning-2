@@ -120,11 +120,11 @@ class Agent:
 
         self.q_network.fit(states_batch, target_batch, epochs=1, verbose=0) 
 
-        def replay_from_memory_double(self, batch_size, num_observations_state): # Double DQN update
+    def replay_from_memory_double(self, batch_size, num_observations_state): # Double DQN update
         batch = random.sample(self.state_list, batch_size)
 
         #loop over the total batch 
-        states_batch = np.zeros((1, num_observations_state))
+        states_batch = np.zeros((1, 84,84,4))
         target_batch = np.zeros((1, 4))
 
         for state, action, reward, next_state, is_game_over in batch:
