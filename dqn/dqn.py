@@ -119,9 +119,10 @@ class DQN():
                 if len(self.q_agent.state_list) > self.replay_batch_size and frame_iterator % self.replay_modulo == 0:
                     if self.use_double:
                         self.q_agent.replay_from_memory_double(self.replay_batch_size, num_observations_state)
-                        # self.q_agent.transfer_weights()
+                        
                     else:
                         self.q_agent.replay_from_memory_target(self.replay_batch_size, num_observations_state)
+                        self.q_agent.transfer_weights()
                 tot_reward += reward
 
                 if is_game_done:
