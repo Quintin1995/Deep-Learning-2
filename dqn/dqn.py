@@ -38,6 +38,12 @@ class DQN():
         self.memory = memory
         self.replay_batch_size = replay_batch_size
         self.replay_modulo = replay_modulo
+        self.filename = "output" + str(int(time.time()))
+        if (self.dueling):
+            self.filename += "dueling"
+        if (self.use_double):
+            self.filename += "double"
+        self.filename += ".txt"
 
         self.print_overview()
 
@@ -138,7 +144,8 @@ class DQN():
                 avg_reward_list.append(avg_reward)
                 reward_list = []
                 self.plot_results(avg_reward_list)
-
+                with open(self.filename,"a+") as f:
+                    f.write(str(tot_reward) + "\n")
 
         self.env.close()
         self.q_agent.model.save(N_MODEL_FILE_PATH + N_MODEL_FILE_NAME)
