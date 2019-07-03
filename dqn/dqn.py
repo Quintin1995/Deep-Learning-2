@@ -85,7 +85,6 @@ class DQN():
 
     #concatenate four frames into one frame stack state
     def collect_states(self, action):
-        self.env.render()
         all_states = np.zeros((84,84,4), dtype=np.float16)
         is_game_done = False
         for i in range(4):
