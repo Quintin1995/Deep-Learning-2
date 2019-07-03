@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 from .parameters import *
 from .network import ActorCriticNetwork
 from .worker import Worker
+from .utils import logger
 
 # Disable GPU if one is detected, this is a CPU only task because of multithreading
 os.environ['CUDA_VISIBLE_DEVICES'] = ''
@@ -28,29 +29,36 @@ class MasterAgent():
 			os.makedirs(self.save_dir)
 		env = gym.make(self.game_name)
 		self.state_size = env.observation_space.shape
+		#self.state_size = (84,84,4)
+		self.state_size = (84,84,A_FRAME_BUFFER) # trying one smaller
 		self.action_size = env.action_space.n
 		self.opt = tf.train.AdamOptimizer(A_LEARN_RATE, use_locking=True)
 		self.global_model = ActorCriticNetwork(self.state_size, self.action_size)  # global network
 		tensor = tf.convert_to_tensor([np.random.random(self.state_size)], dtype=tf.float32)
 		policy, values = self.global_model(tensor)
+		self.game_lengths = []
 
 	def train(self):
+		default_cpu_num = multiprocessing.cpu_count()
+		cpu_num = default_cpu_num
+		#cpu_num = 1 # limiting to 1 thread for debugging
 		res_queue = Queue()
 		workers = [Worker(self.state_size,
 							self.action_size,
 							self.global_model,
 							self.opt, res_queue,
 							i,
-							save_dir=self.save_dir) for i in range(multiprocessing.cpu_count())]
+							save_dir=self.save_dir) for i in range(cpu_num)]
 
 		for i, worker in enumerate(workers):
-			print("Starting worker {}".format(i))
+			#print("Starting worker {}".format(i))
+			logger.info("Starting worker {}".format(i))
 			worker.start()
 
 		moving_average_rewards = []  # record episode reward to plot
 		while True:
 			reward = res_queue.get()
-			print("Getting from res_queue")
+			#print("Getting from res_queue")
 			if reward is not None:
 				moving_average_rewards.append(reward)
 			elif Worker.global_episode < A_MAX_EPS:
@@ -63,7 +71,7 @@ class MasterAgent():
 		plt.ylabel('Moving average ep reward')
 		plt.xlabel('Step')
 		plt.savefig(os.path.join(self.save_dir,'{} Moving Average.png'.format("breakout")))
-		plt.show()
+		#plt.show()
 
 	def play(self):
 		env = gym.make(self.game_name).unwrapped

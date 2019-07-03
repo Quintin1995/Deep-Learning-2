@@ -18,7 +18,8 @@ class ActorCriticNetwork(keras.Model):
 		self.conv1 = layers.Conv2D(N_CONV_DIM,kernel_size=3,activation='relu')
 		self.maxp1 = layers.MaxPooling2D(N_POOL_DIM)
 		self.conv2 = layers.Conv2D(N_CONV_DIM,kernel_size=3,activation='relu')
-		self.maxp2 = layers.MaxPooling2D(N_POOL_DIM)
+		self.maxp2 = layers.BatchNormalization() # Lets try this
+		#self.maxp2 = layers.MaxPooling2D(N_POOL_DIM)
 		self.flat1 = layers.Flatten()
 		self.dense1 = layers.Dense(N_DENSE_DIM,activation='relu')
 		self.policy_logits = layers.Dense(self.action_size)

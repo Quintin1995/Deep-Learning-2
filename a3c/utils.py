@@ -1,4 +1,14 @@
 # Utilities file for actor critic
+import logging
+import sys
+
+logger = logging.getLogger()
+
+logging.basicConfig(
+	stream=sys.stdout,
+	format='%(asctime)s %(levelname)-8s %(message)s',
+	level=logging.DEBUG,
+	datefmt='%Y-%m-%d %H:%M:%S')
 
 class Memory:
 	def __init__(self):
@@ -48,5 +58,5 @@ def record(episode,
 	)
 	"""
 	result_queue.put(global_ep_reward)
-	print("Putting result in queue.")
+	#print("Putting result in queue.")
 	return global_ep_reward
