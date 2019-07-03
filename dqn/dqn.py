@@ -46,7 +46,7 @@ class DQN():
             mdl_type = 'dueling'
         else:
             mdl_type = 'DQN'
-        self.q_agent = Agent(self.num_act,self.num_obs, mdl_type, self.env, use_target=use_double, memory=self.memory)
+        self.q_agent = Agent(self.num_act,self.num_obs, mdl_type, self.env, memory=self.memory)
         # Create save folder for plots if it does not yet exist
         if not os.path.exists(R_PLOTS_PATH):
             os.mkdir(R_PLOTS_PATH)
