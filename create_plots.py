@@ -1,17 +1,25 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
-def plot_from_2d_matrix(data):
+def plot_from_2d_matrix(data, linestyle='-'):
     means = np.mean(data,axis=0)
     std = np.std(data,axis=0)
-    plt.plot(means)
+    plt.plot(means,linestyle=linestyle)
     plt.fill_between(range(len(means)),means-std,means+std,alpha=0.5)
 
-def plot_from_3d_matrix(data):
+def plot_from_3d_matrix(data, labels=None):
+    linestyle = ['-', '--', '-.', ':']
     for i in range(data.shape[0]):
-        plot_from_2d_matrix(data[i,:,:])
+        plot_from_2d_matrix(data[i,:,:],linestyle[i])
+
+    if labels:
+        plt.legend(labels)
+    
+    plt.title('Average training reward')
+    plt.xlabel('Number of training epochs')
+    plt.ylabel('Reward')
 
 if __name__ == "__main__":
-    data = np.random.rand(2,10,100)
-    plot_from_3d_matrix(data)
+    data = np.random.rand(4,10,100)
+    plot_from_3d_matrix(data,labels=['DQN', 'Double DQN', 'Dueling DQN', 'Actor-Critic'])
     plt.show()
