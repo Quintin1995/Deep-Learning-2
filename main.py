@@ -26,7 +26,7 @@ def main():
 
     # Defaults:
     epochs              = 5000
-    memory              = 10000
+    memory              = 20000
     replay_batch_size   = 32
     replay_modulo       = 5
 
