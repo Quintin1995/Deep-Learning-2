@@ -1,0 +1,55 @@
+--------------------------------------------------------------------------
+A process has executed an operation involving a call to the
+"fork()" system call to create a child process.  Open MPI is currently
+operating in a condition that could result in memory corruption or
+other system errors; your job may hang, crash, or produce silent
+data corruption.  The use of fork() (or system() or other calls that
+create child processes) is strongly discouraged.
+
+The process that invoked fork was:
+
+  Local host:          [[7177,1],0] (PID 132933)
+
+If you are *absolutely sure* that your application will successfully
+and correctly survive a call to fork(), you may disable this warning
+by setting the mpi_warn_on_fork MCA parameter to 0.
+--------------------------------------------------------------------------
+slurmstepd: error: *** JOB 6427458 ON pg-node008 CANCELLED AT 2019-07-01T12:16:27 DUE TO TIME LIMIT ***
+
+
+###############################################################################
+Peregrine Cluster
+Job 6427458 for user 'p286668'
+Finished at: Mon Jul  1 12:16:29 CEST 2019
+
+Job details:
+============
+
+Name                : a3c_python
+User                : p286668
+Partition           : regular
+Nodes               : pg-node008
+Cores               : 4
+State               : CANCELLED,TIMEOUT
+Submit              : 2019-07-01T10:16:08
+Start               : 2019-07-01T10:16:10
+End                 : 2019-07-01T12:16:28
+Reserved walltime   : 02:00:00
+Used walltime       : 02:00:18
+Used CPU time       : 06:52:18 (efficiency: 85.68%)
+% User (Computation): 59.27%
+% System (I/O)      : 40.73%
+Mem reserved        : 16000M/node
+Max Mem used        : 9.11G (pg-node008)
+Max Disk Write      : 20.48K (pg-node008)
+Max Disk Read       : 1.62M (pg-node008)
+
+
+Acknowledgements:
+=================
+
+Please see this page if you want to acknowledge Peregrine in your publications:
+
+https://redmine.hpc.rug.nl/redmine/projects/peregrine/wiki/ScientificOutput
+
+################################################################################
