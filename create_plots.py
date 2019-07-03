@@ -1,5 +1,33 @@
 import numpy as np
 from matplotlib import pyplot as plt
+from glob import glob
+from os import listdir
+import re
+
+def load_results(method_name=''):
+    expr = r"output[0-9]+{}.txt".format(method_name)
+    results_matrix = [np.loadtxt(f) for f in listdir('.') if re.search(expr, f)]
+    if not results_matrix:
+        return None
+    min_length = min(map(len, results_matrix))
+
+    for row in range(len(results_matrix)):
+        results_matrix[row] = results_matrix[row][:min_length]
+
+    results_matrix = np.stack(results_matrix)
+    return results_matrix
+
+def load_multiple_results(method_names=['double', 'dueling', '']):
+    result_list = []
+    for method in method_names:
+        results = load_results(method)
+        if results is not None:
+            result_list.append(results)
+
+    result_list = np.stack(result_list)
+    return result_list
+
+
 
 # Plot average of rows from a 2D matrix
 def plot_from_2d_matrix(data, linestyle='-', label=''):
