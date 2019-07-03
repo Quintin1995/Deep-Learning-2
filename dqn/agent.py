@@ -1,5 +1,5 @@
 from collections import *
-from dqn.network import DENSENET, QNetwork
+from dqn.network import QNetwork
 import numpy as np
 import random
 from dqn.parameters import *
@@ -95,7 +95,7 @@ class Agent:
     def replay_from_memory_target(self, batch_size, num_observations_state): # Plain dqn
         batch = random.sample(self.state_list, batch_size)
         #loop over the total batch 
-        states_batch = np.zeros((batch_size, num_observations_state))
+        states_batch = np.zeros((batch_size, 84,84,4))
         target_batch = np.zeros((batch_size, 4))
 
         idx = 0
