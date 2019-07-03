@@ -5,14 +5,14 @@ import random
 from dqn.parameters import *
 
 class Agent:
-    def __init__(self, amount_actions, amount_states, mdl_type, env, use_target=False, memory=10000):
+    def __init__(self, amount_actions, amount_states, mdl_type, env, memory=10000):
         #create and build the denseNet model for the agent
-        self.model = QNetwork(env,model_type=mdl_type)
-        self.model = self.model.model
-        if use_target: 
-            self.target_model = QNetwork(env,model_type=mdl_type)
-            self.target_model = self.target_model.model
+        self.q_network = QNetwork(env,model_type=mdl_type)
+        self.q_network = self.q_network.model
 
+        self.target_model = QNetwork(env,model_type=mdl_type)
+        self.target_model = self.target_model.model
+        
         #set amount actions and amount states for the agent.
         self.amount_actions = amount_actions
         self.amount_states  = amount_states
@@ -43,12 +43,12 @@ class Agent:
         if prob <= self.epsilon_max:
             return random.randrange(self.amount_actions)
         #action values are the values of each neuron in the last layer of the neural network.
-        action_values = self.model.predict(state)
+        action_values = self.q_network.predict(state)
         idx_action = np.argmax(action_values[0]) 
         return idx_action
 
     def transfer_weights (self):
-        W = self.model.get_weights()
+        W = self.q_network.get_weights()
         target_W = self.target_model.get_weights()
         for i in range (len (W)):
             target_W[i] = P_TAU * W[i] + (1 - P_TAU) * target_W[i]
@@ -74,25 +74,25 @@ class Agent:
 
         for state, action, reward, next_state, is_game_over in batch:
             #reward of winning the game is given by the game itself
-            target = self.model.predict(state)
+            target = self.q_network.predict(state)
             if is_game_over:
                 target[0][action] = reward
             else:
                 #if the game is not over we apply the q-learning formula - Add the reward to the discounted predicted valuation of the next state to become the target valuation of the current state.
-                Q_future = max(self.model.predict(next_state)[0])
+                Q_future = max(self.q_network.predict(next_state)[0])
                 target[0][action] = (reward + self.gamma * Q_future)
                 
             states_batch[idx] = state
             target_batch[idx] = target
             idx += 1
 
-        self.model.fit(states_batch, target_batch, epochs=1, verbose=0) 
+        self.q_network.fit(states_batch, target_batch, epochs=1, verbose=0) 
 
     # Trains the neural network on a batch of states from memory of the agent.
     # A random sample form the state list (READ state-pair list) of the agent
     #  is picked and for each state-pair the new valuation of the current step
     #  is calculated with the help of the valuation of the next state.
-    def replay_from_memory_double(self, batch_size, num_observations_state):
+    def replay_from_memory_target(self, batch_size, num_observations_state): # Plain dqn
         batch = random.sample(self.state_list, batch_size)
         #loop over the total batch 
         states_batch = np.zeros((batch_size, num_observations_state))
@@ -102,14 +102,14 @@ class Agent:
 
         for state, action, reward, next_state, is_game_over in batch:
             #reward of winning the game is given by the game itself
-            q_val   = self.model.predict(state)
+            q_val   = self.q_network.predict(state)
             q_target= self.target_model.predict(next_state)[0]
 
             if is_game_over:
                 q_val[0][action] = reward
             else:
                 #if the game is not over we apply the q-learning formula - Add the reward to the discounted predicted valuation of the next state to become the target valuation of the current state.
-                q_next = self.model.predict(next_state)
+                q_next = self.q_network.predict(next_state)
                 q_next = q_next[0]
                 next_best_action = np.argmax(q_next)
                 q_val[0][action] = (reward + self.gamma * q_target[next_best_action])
@@ -118,4 +118,39 @@ class Agent:
             target_batch[idx] = q_val
             idx += 1
 
-        self.model.fit(states_batch, target_batch, epochs=1, verbose=0) 
+        self.q_network.fit(states_batch, target_batch, epochs=1, verbose=0) 
+
+        def replay_from_memory_double(self, batch_size, num_observations_state): # Double DQN update
+        batch = random.sample(self.state_list, batch_size)
+
+        #loop over the total batch 
+        states_batch = np.zeros((1, num_observations_state))
+        target_batch = np.zeros((1, 4))
+
+        for state, action, reward, next_state, is_game_over in batch:
+
+            #reward of winning the game is given by the game itself
+            q_val   = self.q_network.predict(state)
+            q_target= self.target_model.predict(next_state)[0]
+
+            if is_game_over:
+                q_val[0][action] = reward
+            else:
+                #if the game is not over we apply the q-learning formula - Add the reward to the discounted predicted valuation of the next state to become the target valuation of the current state.
+                q_next = self.q_network.predict(next_state)
+                q_next = q_next[0]
+                next_best_action = np.argmax(q_next)
+                q_val[0][action] = (reward + self.gamma * q_target[next_best_action])
+                
+            states_batch[0] = state
+            target_batch[0] = q_val
+
+            self.q_network.fit(states_batch, target_batch, epochs=1, verbose=0) 
+
+            # Symetrically switch roles
+            temp = self.target_model
+            self.target_model = self.q_network
+            self.q_network = temp
+            
+
+

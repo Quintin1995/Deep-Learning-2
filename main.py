@@ -16,7 +16,7 @@ def main():
     mutex1.add_argument('-t',type=str,help="Flag for training one of the methods. Takes one positional argument (being the name of the method).")
     mutex1.add_argument('-v',type=str,help="Flag for validation/testing one of the methods. Takes one positional argument.")
     parser.add_argument('--norender',help="Disables rendering the game during training/testing so we can run it on peregrine.")
-    parser.add_argument('--target', action='store_true', help="Enables frozen weights target network for DQN model.")
+    parser.add_argument('--double', action='store_true', help="Enables frozen weights DOUBLE network for DQN model.")
     parser.add_argument('--duel', action='store_true',help="Uses a dueling network structure when running with a DQN network.")
     parser.add_argument('--epochs', type=int, help="Specify amount of epochs to run.")
     parser.add_argument('--memory', type=int, help="Specify amount of experiences we can store at once.")
@@ -42,7 +42,7 @@ def main():
     if args.t:
         # training
         if args.t == 'dqn':
-            deepQ = dqn.DQN(dueling=args.duel==True, use_target_network=args.target==True, epochs=epochs, memory=memory, replay_batch_size=replay_batch_size, replay_modulo=replay_modulo)
+            deepQ = dqn.DQN(dueling=args.duel==True, use_double=args.double==True, epochs=epochs, memory=memory, replay_batch_size=replay_batch_size, replay_modulo=replay_modulo)
 
             deepQ.run_experiment()
         elif args.t == 'a3c':
