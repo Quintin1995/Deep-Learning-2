@@ -28,10 +28,10 @@ def onoroff(boolean):
         return bcolors.OFF
 
 class DQN():
-    def __init__(self, dueling=True, use_target_network=True, epochs=5000, memory=10000, replay_batch_size=32, replay_modulo=5):
+    def __init__(self, dueling=True, use_double=True, epochs=5000, memory=10000, replay_batch_size=32, replay_modulo=5):
         print("Setting up Lunar Lander environment.")
         self.dueling = dueling
-        self.use_target_network = use_target_network
+        self.use_double = use_double
         self.env = gym.make("Breakout-v4")
         self.num_act = self.env.action_space.n
         self.num_obs = self.env.observation_space.shape[0]
@@ -46,7 +46,7 @@ class DQN():
             mdl_type = 'dueling'
         else:
             mdl_type = 'DQN'
-        self.q_agent = Agent(self.num_act,self.num_obs, mdl_type, self.env, use_target=use_target_network, memory=self.memory)
+        self.q_agent = Agent(self.num_act,self.num_obs, mdl_type, self.env, use_target=use_double, memory=self.memory)
         # Create save folder for plots if it does not yet exist
         if not os.path.exists(R_PLOTS_PATH):
             os.mkdir(R_PLOTS_PATH)
@@ -55,8 +55,8 @@ class DQN():
 
     def print_overview (self):
         print (bcolors.OKBLUE + "CURRENT SETTINGS" + bcolors.ENDC)
-        print ("DUELING:        " + onoroff(self.dueling))
-        print ("TARGET NETWORK: " + onoroff(self.use_target_network))
+        print ("DUELEREND NETWERK:        " + onoroff(self.dueling))
+        print ("GEDOUBLEERD NETWERK: " + onoroff(self.use_double))
         print ("EPOCHS:         " + str(self.epochs))
         print ("REPLAY MEM.:    " + str(self.memory))
         print ("REPLAY B. SIZE: " + str(self.replay_batch_size))
@@ -119,11 +119,11 @@ class DQN():
                 state = next_state
 
                 if len(self.q_agent.state_list) > self.replay_batch_size and frame_iterator % self.replay_modulo == 0:
-                    if self.use_target_network:
+                    if self.use_double:
                         self.q_agent.replay_from_memory_double(self.replay_batch_size, num_observations_state)
-                        self.q_agent.transfer_weights()
+                        # self.q_agent.transfer_weights()
                     else:
-                        self.q_agent.replay_from_memory(self.replay_batch_size, num_observations_state)
+                        self.q_agent.replay_from_memory_target(self.replay_batch_size, num_observations_state)
                 tot_reward += reward
 
                 if is_game_done:
