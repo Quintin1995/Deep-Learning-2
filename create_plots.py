@@ -4,20 +4,21 @@ from glob import glob
 from os import listdir
 import re
 
-def load_results(method_name=''):
+AVG_N = 10
+
+def load_results(method_name):
     expr = r"output[0-9]+{}.txt".format(method_name)
     results_matrix = [np.loadtxt(f) for f in listdir('.') if re.search(expr, f)]
     if not results_matrix:
         return None
-    min_length = min(map(len, results_matrix))
 
     for row in range(len(results_matrix)):
-        results_matrix[row] = results_matrix[row][:min_length]
+        results_matrix[row] = [np.mean(results_matrix[row][i:i+AVG_N]) for i in range(0,len(results_matrix[row]),AVG_N)]
 
     results_matrix = np.stack(results_matrix)
     return results_matrix
 
-def load_multiple_results(method_names=['double', 'dueling', '']):
+def load_multiple_results(method_names):
     result_list = []
     for method in method_names:
         results = load_results(method)
@@ -37,8 +38,8 @@ def plot_from_2d_matrix(data, linestyle='-', label=''):
     std = np.std(data,axis=0)
 
     # Plot means and standard deviations
-    plt.plot(means,linestyle=linestyle)
-    plt.fill_between(range(len(means)),means-std,means+std,alpha=0.5)
+    plt.plot(np.arange(0, len(means) * AVG_N, AVG_N), means, linestyle=linestyle)
+    plt.fill_between(np.arange(0, len(means) * AVG_N, AVG_N), means-std, means+std,alpha=0.5)
 
     # Add title and axis labels
     plt.title(label)
@@ -64,6 +65,6 @@ def plot_from_3d_matrix(data, labels=None):
 
 # Plot from random noise for testing purposes
 if __name__ == "__main__":
-    data = np.random.rand(4,10,100)
-    plot_from_3d_matrix(data,labels=['DQN', 'Double DQN', 'Dueling DQN', 'Actor-Critic'])
+    data = load_multiple_results(['','double','dueling','a3c'])
+    plot_from_3d_matrix(data, labels=['DQN', 'Double DQN', 'Dueling DQN', 'Actor-Critic'])
     plt.show()
