@@ -25,10 +25,10 @@ def main():
     args = parser.parse_args()
 
     # Defaults:
-    epochs              = 5000
+    epochs              = 10000
     memory              = 20000
     replay_batch_size   = 32
-    replay_modulo       = 5
+    replay_modulo       = 1
 
     if args.epochs:
         epochs = args.epochs
