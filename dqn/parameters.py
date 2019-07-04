@@ -5,8 +5,8 @@
 MAIN PARAMETERS
 ########### """
 #M stands for main
-M_NUM_GAMES             = 5000                            #number of games to be played in total.
-M_MAX_FRAMES_PER_GAME   = 600                        #maximum amount of frames allowed per game, after which it will quit that game.
+M_NUM_GAMES             = 10000                            #number of games to be played in total.
+M_MAX_FRAMES_PER_GAME   = 12000                        #maximum amount of frames allowed per game, after which it will quit that game.
 M_DO_RENDER_GAME        = True                          #set to true if you want to see the visuals of the game
 M_PLAY_BATCH_SIZE       = 32                             #an agent replays this many state  games from strored states. size of how many games are played
 

@@ -1,0 +1,39 @@
+
+The following have been reloaded with a version change:
+  1) Python/3.6.4-fosscuda-2018a => Python/3.6.4-foss-2018a
+
+
+The following have been reloaded with a version change:
+  1) Python/3.6.4-foss-2018a => Python/3.6.4-fosscuda-2018a
+
+
+The following have been reloaded with a version change:
+  1) Python/3.6.4-fosscuda-2018a => Python/3.6.4-foss-2018a
+
+
+The following have been reloaded with a version change:
+  1) Python/3.6.4-foss-2018a => Python/3.6.4-fosscuda-2018a
+
+Requirement already satisfied: keras in /home/p286668/.local/lib/python3.6/site-packages
+Requirement already satisfied: h5py in /home/p286668/.local/lib/python3.6/site-packages (from keras)
+Requirement already satisfied: six>=1.9.0 in /apps/haswell/software/TensorFlow/1.10.1-fosscuda-2018a-Python-3.6.4/lib/python3.6/site-packages (from keras)
+Requirement already satisfied: keras-applications>=1.0.6 in /home/p286668/.local/lib/python3.6/site-packages (from keras)
+Requirement already satisfied: keras-preprocessing>=1.0.5 in /home/p286668/.local/lib/python3.6/site-packages (from keras)
+Requirement already satisfied: numpy>=1.9.1 in /apps/haswell/software/TensorFlow/1.10.1-fosscuda-2018a-Python-3.6.4/lib/python3.6/site-packages (from keras)
+Requirement already satisfied: scipy>=0.14 in /home/p286668/.local/lib/python3.6/site-packages (from keras)
+Requirement already satisfied: pyyaml in /home/p286668/.local/lib/python3.6/site-packages (from keras)
+You are using pip version 9.0.1, however version 19.1.1 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
+2019-07-03 15:29:57.619296: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX512F
+2019-07-03 15:29:57.753278: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:897] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-07-03 15:29:57.754069: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1405] Found device 0 with properties: 
+name: GRID V100D-32Q major: 7 minor: 0 memoryClockRate(GHz): 1.38
+pciBusID: 0000:02:00.0
+totalMemory: 32.00GiB freeMemory: 29.69GiB
+2019-07-03 15:29:57.754114: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1484] Adding visible gpu devices: 0
+2019-07-03 15:29:59.039697: I tensorflow/core/common_runtime/gpu/gpu_device.cc:965] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-07-03 15:29:59.039792: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971]      0 
+2019-07-03 15:29:59.039809: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] 0:   N 
+2019-07-03 15:29:59.040567: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1097] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 28797 MB memory) -> physical GPU (device: 0, name: GRID V100D-32Q, pci bus id: 0000:02:00.0, compute capability: 7.0)
+2019-07-03 15:29:59.278458: I tensorflow/core/common_runtime/process_util.cc:69] Creating new thread pool with default inter op setting: 2. Tune using inter_op_parallelism_threads for best performance.
+slurmstepd: error: *** JOB 6460422 ON pg-gpu35 CANCELLED AT 2019-07-04T12:14:07 ***
