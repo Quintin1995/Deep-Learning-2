@@ -36,3 +36,4 @@ totalMemory: 32.00GiB freeMemory: 29.69GiB
 2019-07-03 15:29:59.113506: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] 0:   N 
 2019-07-03 15:29:59.114446: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1097] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 28797 MB memory) -> physical GPU (device: 0, name: GRID V100D-32Q, pci bus id: 0000:02:00.0, compute capability: 7.0)
 2019-07-03 15:29:59.324200: I tensorflow/core/common_runtime/process_util.cc:69] Creating new thread pool with default inter op setting: 2. Tune using inter_op_parallelism_threads for best performance.
+slurmstepd: error: *** JOB 6460423 ON pg-gpu21 CANCELLED AT 2019-07-04T12:14:03 ***
