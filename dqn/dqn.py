@@ -31,7 +31,7 @@ class DQN():
         print("Setting up Lunar Lander environment.")
         self.dueling = dueling
         self.use_double = use_double
-        self.env = gym.make("Breakout-v4")
+        self.env = gym.make("BreakoutNoFrameskip-v4")
         self.num_act = self.env.action_space.n
         self.num_obs = self.env.observation_space.shape[0]
         self.epochs = epochs
@@ -73,7 +73,7 @@ class DQN():
     # Plots the average reward
     def plot_results(self, avg_reward_list, name=R_PLOTS_FILE):
         # Plot Rewards
-        plt.plot(10*(np.arange(len(avg_reward_list)) + 1), avg_reward_list)
+        plt.plot((np.arange(len(avg_reward_list)) + 1), avg_reward_list)
         plt.xlabel('Episodes')
         plt.ylabel('Average Reward')
         plt.title('Average Reward vs Episodes')
@@ -143,7 +143,8 @@ class DQN():
                 avg_reward = np.mean(reward_list)
                 avg_reward_list.append(avg_reward)
                 reward_list = []
-                self.plot_results(avg_reward_list)
+                if (game_iterator+1) % 5 == 0:
+                    self.plot_results(avg_reward_list, name=self.filename[:-4])
                 with open(self.filename,"a+") as f:
                     f.write(str(tot_reward) + "\n")
 

@@ -57,17 +57,17 @@ class QNetwork():
 		#Builds a DQN
 		model=Sequential()
 		# model.add(Input(self.obs_space))
-		model.add(Conv2D(32, (5, 5), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last", input_shape=(84, 84, 4)))
+		model.add(Conv2D(32, (3, 3), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last", input_shape=(84, 84, 4)))
 		model.add(MaxPooling2D(pool_size=(2, 2)))
-		model.add(Conv2D(32, (5, 5), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last"))
+		model.add(Conv2D(32, (3, 3), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last"))
 		model.add(MaxPooling2D(pool_size=(2, 2)))
-		model.add(Conv2D(32, (5, 5), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last"))
-		model.add(MaxPooling2D(pool_size=(2, 2)))
+		model.add(Conv2D(32, (3, 3), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last"))
+		# model.add(MaxPooling2D(pool_size=(2, 2)))
 		model.add(Flatten())
 
-		model.add(Dense(units=24,input_dim=self.obs_space,activation='relu',
+		model.add(Dense(units=150,input_dim=self.obs_space,activation='relu',
 						kernel_initializer='he_uniform'))
-		model.add(Dense(units=24,activation='relu',kernel_initializer='he_uniform'))
+		model.add(Dense(units=150,activation='relu',kernel_initializer='he_uniform'))
 		model.add(Dense(units=self.ac_space,activation='linear',kernel_initializer='he_uniform'))
 		# model.build(input_shape=self.obs_space)
 		model.compile(loss='mean_squared_error',optimizer=Adam(lr=self.learning_rate))
@@ -77,17 +77,17 @@ class QNetwork():
 	#best dueling model
 	def build_model_dueling(self):
 		inp = Input(shape=(84, 84, 4))
-		x = Conv2D(32, (5, 5), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last")(inp)
+		x = Conv2D(32, (3, 3), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last")(inp)
 		x = MaxPooling2D(pool_size=(2, 2))(x)
-		x = Conv2D(32, (5, 5), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last")(x)
+		x = Conv2D(32, (3, 3), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last")(x)
 		x = MaxPooling2D(pool_size=(2, 2))(x)
-		x = Conv2D(32, (5, 5), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last")(x)
-		x = MaxPooling2D(pool_size=(2, 2))(x)
+		x = Conv2D(32, (3, 3), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last")(x)
+		# x = MaxPooling2D(pool_size=(2, 2))(x)
 		
 		x = Flatten()(x)
 
-		x = Dense(units=32,activation='relu',kernel_initializer='he_uniform',name='hidden_layer_1')(x)
-		x = Dense(units=32,activation='relu',kernel_initializer='he_uniform',name='hidden_layer_2')(x)
+		x = Dense(units=150,activation='relu',kernel_initializer='he_uniform',name='hidden_layer_1')(x)
+		x = Dense(units=150,activation='relu',kernel_initializer='he_uniform',name='hidden_layer_2')(x)
 
 		value_=Dense(units=1,activation='linear',kernel_initializer='he_uniform',name='Value_func')(x)
 		ac_activation=Dense(units=self.ac_space,activation='linear',kernel_initializer='he_uniform',name='action')(x)
@@ -113,17 +113,17 @@ class QNetwork():
 
 	def build_model_dueling_second(self):
 		inp = Input(shape=(84, 84, 4))
-		x = Conv2D(32, (5, 5), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last")(inp)
+		x = Conv2D(32, (3, 3), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last")(inp)
 		x = MaxPooling2D(pool_size=(2, 2))(x)
-		x = Conv2D(32, (5, 5), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last")(x)
+		x = Conv2D(32, (3, 3), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last")(x)
 		x = MaxPooling2D(pool_size=(2, 2))(x)
-		x = Conv2D(32, (5, 5), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last")(x)
-		x = MaxPooling2D(pool_size=(2, 2))(x)
+		x = Conv2D(32, (3, 3), activation = 'relu', padding = 'same', kernel_initializer = 'he_normal', data_format="channels_last")(x)
+		# x = MaxPooling2D(pool_size=(2, 2))(x)
 		
 		x = Flatten()(x)
 
-		x   = Dense(64, activation = 'relu')(x)
-		x   = Dense(64, activation = 'relu')(x)
+		x   = Dense(150, activation = 'relu')(x)
+		x   = Dense(150, activation = 'relu')(x)
 		if(self.model_type == "dueling2"):
 			x = Dense(self.ac_space + 1, activation='linear')(x)
 			x = Lambda(lambda i: K.expand_dims(i[:,0], -1) + i[:,1:] - K.mean(i[:,1:], keepdims=True), output_shape=(self.ac_space,))(x)
