@@ -18,7 +18,7 @@ RESULTS PARAMETERS
 #R stands for results
 R_AVG_RANGE     = 1                            # Take the average result over N individual game results
 R_PLOTS_PATH    = 'plots/'                      # Directory to place the plots in
-R_PLOTS_FILE    = 'reward_results.eps'          # File name for result plots
+R_PLOTS_FILE    = 'reward_results_new.eps'          # File name for result plots
 
 """ ##########
 NETWORK PARAMS
