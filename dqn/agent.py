@@ -67,7 +67,7 @@ class Agent:
     def replay_from_memory(self, batch_size, num_observations_state):
         batch = random.sample(self.state_list, batch_size)
         #loop over the total batch 
-        states_batch = np.zeros((batch_size, num_observations_state))
+        states_batch = np.zeros((batch_size, 84, 84, 4))
         target_batch = np.zeros((batch_size, 4))
 
         idx = 0

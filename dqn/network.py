@@ -17,20 +17,19 @@ from gym.wrappers import Monitor
 import pickle
 import os
 
+
 class QNetwork():
 
 	def __init__(self, env, model_type=None):
-		self.learning_rate =0.0001														#######Hyperparameter
+		self.learning_rate = 0.0001														#######Hyperparameter
 		self.obs_space     = env.observation_space.shape + (-1,)
-		self.ac_space      =env.action_space.n
+		self.ac_space      = env.action_space.n
 		self.model_type    = model_type
 		
 		if(model_type=='DQN'):
 			print("Building DQN model")
 			self.model=self.build_model_DQN()
-		elif(model_type=='linear' or model_type=='Linear'):
-			print("Building linear model")
-			self.model=self.build_model_linear()
+
 		elif(model_type=='Dueling' or model_type=='dueling'):
 			print("Dueling  Model")
 			self.model=self.build_model_dueling()
@@ -53,6 +52,8 @@ class QNetwork():
 		# Helper funciton to load model weights. 
 		self.model.load_weights(weight_file)
 
+
+	#default DQN, baseline model
 	def build_model_DQN(self):
 		#Builds a DQN
 		model=Sequential()
@@ -65,14 +66,14 @@ class QNetwork():
 		# model.add(MaxPooling2D(pool_size=(2, 2)))
 		model.add(Flatten())
 
-		model.add(Dense(units=150,input_dim=self.obs_space,activation='relu',
-						kernel_initializer='he_uniform'))
+		model.add(Dense(units=150,input_dim=self.obs_space,activation='relu',kernel_initializer='he_uniform'))
 		model.add(Dense(units=150,activation='relu',kernel_initializer='he_uniform'))
 		model.add(Dense(units=self.ac_space,activation='linear',kernel_initializer='he_uniform'))
 		# model.build(input_shape=self.obs_space)
 		model.compile(loss='mean_squared_error',optimizer=Adam(lr=self.learning_rate))
 		model.summary()
 		return model
+
 
 	#best dueling model
 	def build_model_dueling(self):
@@ -88,6 +89,7 @@ class QNetwork():
 
 		x = Dense(units=150,activation='relu',kernel_initializer='he_uniform',name='hidden_layer_1')(x)
 		x = Dense(units=150,activation='relu',kernel_initializer='he_uniform',name='hidden_layer_2')(x)
+
 
 		value_=Dense(units=1,activation='linear',kernel_initializer='he_uniform',name='Value_func')(x)
 		ac_activation=Dense(units=self.ac_space,activation='linear',kernel_initializer='he_uniform',name='action')(x)

@@ -31,7 +31,6 @@ def load_multiple_results(method_names):
     return result_list
 
 
-
 # Plot average of rows from a 2D matrix
 def plot_from_2d_matrix(data, linestyle='-', label=''):
 
