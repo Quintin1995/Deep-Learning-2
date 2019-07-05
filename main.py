@@ -2,6 +2,7 @@
 import argparse
 
 import dqn.dqn as dqn
+import a3c
 # import other frameworks here
 
 valid_alg = [
@@ -13,7 +14,7 @@ def main():
     parser = argparse.ArgumentParser()
     mutex1 = parser.add_mutually_exclusive_group()
     # This means we can now either train or validate. Validate is just here so we can have single letter options because train and test start with the same letter
-    mutex1.add_argument('-t',type=str,help="Flag for training one of the methods. Takes one positional argument (being the name of the method).")
+    #mutex1.add_argument('-t',type=str,help="Flag for training one of the methods. Takes one positional argument (being the name of the method).")
     mutex1.add_argument('-v',type=str,help="Flag for validation/testing one of the methods. Takes one positional argument.")
     parser.add_argument('--norender',help="Disables rendering the game during training/testing so we can run it on peregrine.")
     parser.add_argument('--double', action='store_true', help="Enables frozen weights DOUBLE network for DQN model.")
@@ -46,8 +47,9 @@ def main():
 
             deepQ.run_experiment()
         elif args.t == 'a3c':
-            pass
-            # asynchonous advantage actor critic training here
+            # Asynchronous advantage actor critic
+            aaac = a3c.MasterAgent()
+            aaac.train()
         elif args.t == 'pdqn':
             pass
             # prioroty dqn training here (is that what its called?)
