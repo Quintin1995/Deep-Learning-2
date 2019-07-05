@@ -4,7 +4,8 @@ from glob import glob
 from os import listdir
 import re
 
-AVG_N = 10
+AVG_N = 20
+X_AXIS = 2000
 
 def load_results(method_name):
     expr = r"output[0-9]+{}.txt".format(method_name)
@@ -14,6 +15,7 @@ def load_results(method_name):
 
     for row in range(len(results_matrix)):
         results_matrix[row] = [np.mean(results_matrix[row][i:i+AVG_N]) for i in range(0,len(results_matrix[row]),AVG_N)]
+        results_matrix[row] = results_matrix[row][:X_AXIS//AVG_N]
 
     results_matrix = np.stack(results_matrix)
     return results_matrix
