@@ -5,6 +5,7 @@ from dqn.parameters import *
 import numpy as np
 import os
 import matplotlib.pyplot as plt
+import sys
 import time
 
 
@@ -137,7 +138,7 @@ class DQN():
                 
             self.q_agent.update_epsilon_greedy()
             print("Game Number: {} of {}, Exploration: {:.2}, Frames Used: {}, Total reward: {}".format(game_iterator, self.epochs, self.q_agent.epsilon_max, frame_iterator, tot_reward))
-            
+            sys.stdout.flush()
             reward_list.append(tot_reward)
             if (game_iterator+1) % R_AVG_RANGE == 0:
                 avg_reward = np.mean(reward_list)
