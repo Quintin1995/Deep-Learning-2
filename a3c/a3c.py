@@ -50,7 +50,10 @@ class MasterAgent():
 
 	def train(self):
 		default_cpu_num = multiprocessing.cpu_count()
-		cpu_num = default_cpu_num
+		if default_cpu_num <= A_MAX_CPU:
+			cpu_num = default_cpu_num
+		else:
+			cpu_num = A_MAX_CPU
 		#cpu_num = 1 # limiting to 1 thread for debugging
 		res_queue = Queue()
 		workers = [Worker(self.state_size,

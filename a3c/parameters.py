@@ -37,6 +37,7 @@ A_UPDATE_FREQ			= 20							# Number of time steps between model updates
 A_MAX_FRAMES			= 2000							# Max number of frames per game, game is stopped after this number of frames
 A_FRAME_BUFFER			= 4								# Number of frames we condense into a single state
 A_GAME_NAME				= "BreakoutNoFrameskip-v4"		# Defines the game name for A3C
+A_MAX_CPU				= 24							# Determines max number of CPUs for task
 
 
 #N stands for neural

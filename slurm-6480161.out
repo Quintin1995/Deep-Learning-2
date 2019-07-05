@@ -1,0 +1,111 @@
+--------------------------------------------------------------------------
+A process has executed an operation involving a call to the
+"fork()" system call to create a child process.  Open MPI is currently
+operating in a condition that could result in memory corruption or
+other system errors; your job may hang, crash, or produce silent
+data corruption.  The use of fork() (or system() or other calls that
+create child processes) is strongly discouraged.
+
+The process that invoked fork was:
+
+  Local host:          [[24120,1],0] (PID 109118)
+
+If you are *absolutely sure* that your application will successfully
+and correctly survive a call to fork(), you may disable this warning
+by setting the mpi_warn_on_fork MCA parameter to 0.
+--------------------------------------------------------------------------
+2019-07-04 01:41:32 INFO     Starting worker 0
+2019-07-04 01:41:32 INFO     Game: 0
+2019-07-04 01:41:32 INFO     Starting worker 1
+2019-07-04 01:41:32 INFO     Game: 0
+2019-07-04 01:41:32 INFO     Starting worker 2
+2019-07-04 01:41:32 INFO     Game: 0
+2019-07-04 01:41:32 INFO     Starting worker 3
+2019-07-04 01:41:32 INFO     Game: 0
+2019-07-04 01:41:32 INFO     Starting worker 4
+2019-07-04 01:41:32 INFO     Game: 0
+2019-07-04 01:41:32 INFO     Starting worker 5
+2019-07-04 01:41:32 INFO     Game: 0
+2019-07-04 01:41:32 INFO     Starting worker 6
+2019-07-04 01:41:32 INFO     Game: 0
+2019-07-04 01:41:32 INFO     Starting worker 7
+2019-07-04 01:41:32 INFO     Game: 0
+2019-07-04 01:41:32 INFO     Starting worker 8
+2019-07-04 01:41:32 INFO     Game: 0
+2019-07-04 01:41:32 INFO     Starting worker 9
+2019-07-04 01:41:32 INFO     Game: 0
+2019-07-04 01:41:32 INFO     Starting worker 10
+2019-07-04 01:41:32 INFO     Game: 0
+2019-07-04 01:41:32 INFO     Starting worker 11
+2019-07-04 01:41:32 INFO     Game: 0
+2019-07-04 01:41:32 INFO     Starting worker 12
+2019-07-04 01:41:32 INFO     Game: 0
+2019-07-04 01:41:32 INFO     Starting worker 13
+2019-07-04 01:41:32 INFO     Game: 0
+2019-07-04 01:41:32 INFO     Starting worker 14
+2019-07-04 01:41:32 INFO     Game: 0
+2019-07-04 01:41:32 INFO     Starting worker 15
+2019-07-04 01:41:32 INFO     Game: 0
+2019-07-04 01:41:32 INFO     Starting worker 16
+2019-07-04 01:41:32 INFO     Game: 0
+2019-07-04 01:41:32 INFO     Starting worker 17
+2019-07-04 01:41:33 INFO     Game: 0
+2019-07-04 01:41:33 INFO     Starting worker 18
+2019-07-04 01:41:33 INFO     Game: 0
+2019-07-04 01:41:33 INFO     Starting worker 19
+2019-07-04 01:41:33 INFO     Game: 0
+2019-07-04 01:41:33 INFO     Starting worker 20
+2019-07-04 01:41:33 INFO     Game: 0
+2019-07-04 01:41:33 INFO     Starting worker 21
+2019-07-04 01:41:33 INFO     Game: 0
+2019-07-04 01:41:33 INFO     Starting worker 22
+2019-07-04 01:41:33 INFO     Game: 0
+2019-07-04 01:41:33 INFO     Starting worker 23
+2019-07-04 01:41:33 INFO     Game: 0
+2019-07-04 01:41:33 INFO     Starting worker 24
+2019-07-04 01:41:33 INFO     Game: 0
+2019-07-04 01:41:33 INFO     Starting worker 25
+2019-07-04 01:41:33 INFO     Game: 0
+2019-07-04 01:41:33 INFO     Starting worker 26
+2019-07-04 01:41:33 INFO     Game: 0
+2019-07-04 01:41:33 INFO     Starting worker 27
+2019-07-04 01:41:33 INFO     Game: 0
+slurmstepd: error: *** JOB 6480161 ON pg-node199 CANCELLED AT 2019-07-04T01:42:38 ***
+
+
+###############################################################################
+Peregrine Cluster
+Job 6480161 for user 'p286668'
+Finished at: Thu Jul  4 01:42:40 CEST 2019
+
+Job details:
+============
+
+Name                : a3c_python
+User                : p286668
+Partition           : regular
+Nodes               : pg-node199
+Cores               : 24
+State               : CANCELLED,CANCELLED by 10286668
+Submit              : 2019-07-04T01:41:04
+Start               : 2019-07-04T01:41:05
+End                 : 2019-07-04T01:42:39
+Reserved walltime   : 18:00:00
+Used walltime       : 00:01:34
+Used CPU time       : 00:23:49 (efficiency: 63.38%)
+% User (Computation): 40.39%
+% System (I/O)      : 59.61%
+Mem reserved        : 62.50G/node
+Max Mem used        : 6.07G (pg-node199)
+Max Disk Write      : 40.96K (pg-node199)
+Max Disk Read       : 1.98M (pg-node199)
+
+
+Acknowledgements:
+=================
+
+Please see this page if you want to acknowledge Peregrine in your publications:
+
+https://redmine.hpc.rug.nl/redmine/projects/peregrine/wiki/ScientificOutput
+
+################################################################################
