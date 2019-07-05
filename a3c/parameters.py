@@ -25,17 +25,18 @@ NETWORK PARAMS
 ########## """
 N_POOL_DIM				= (2,2)							# Size of the max pooling pass for convolutional block
 N_CONV_DIM				= 32							# Number of hidden units in convolutional layer
-N_DENSE_DIM				= 100							# Number of hidden units in a dense layer
+N_DENSE_DIM				= 150							# Number of hidden units in a dense layer
 
 """ ##########
 ACTOR CRITIC PARAMS
 ###########"""
 A_LEARN_RATE			= 0.0005						# Learning rate
 A_GAMMA					= 0.98							# Gamma for Q-parameter
-A_MAX_EPS				= 96000							# Number of epochs/games
+A_MAX_EPS				= 12000							# Number of epochs/games
 A_UPDATE_FREQ			= 20							# Number of time steps between model updates
 A_MAX_FRAMES			= 2000							# Max number of frames per game, game is stopped after this number of frames
-A_FRAME_BUFFER			= 2								# Number of frames we condense into a single state
+A_FRAME_BUFFER			= 4								# Number of frames we condense into a single state
+A_GAME_NAME				= "BreakoutNoFrameskip-v4"		# Defines the game name for A3C
 
 
 #N stands for neural

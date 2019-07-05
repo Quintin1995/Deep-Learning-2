@@ -22,8 +22,10 @@ class ActorCriticNetwork(keras.Model):
 		#self.maxp2 = layers.MaxPooling2D(N_POOL_DIM)
 		self.flat1 = layers.Flatten()
 		self.dense1 = layers.Dense(N_DENSE_DIM,activation='relu')
-		self.policy_logits = layers.Dense(self.action_size)
 		self.dense2 = layers.Dense(N_DENSE_DIM,activation='relu')
+		self.policy_logits = layers.Dense(self.action_size)
+		self.dense3 = layers.Dense(N_DENSE_DIM,activation='relu')
+		self.dense4 = layers.Dense(N_DENSE_DIM,activation='relu')
 		self.values = layers.Dense(1)
 	
 	def conv_block(self,inp):
@@ -53,8 +55,10 @@ class ActorCriticNetwork(keras.Model):
 		x = self.maxp2(x)
 		x = self.flat1(x)
 		x = self.dense1(x)
+		#x = self.dense2(x)
 		policy = self.policy_logits(x)
-		x = self.dense2(policy)
+		x = self.dense3(policy)
+		#x = self.dense4(x)
 		values = self.values(x)
 		return policy, values
 

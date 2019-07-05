@@ -41,7 +41,7 @@ class Worker(threading.Thread):
 		#self.local_ep = 0
 		#self.max_q_size = 100000
 		#self.traffic_map = Map(self.max_q_size)
-		self.env = gym.make("Breakout-v0")
+		self.env = gym.make(A_GAME_NAME)
 		self.save_dir = save_dir
 		self.ep_loss = 0.0
 
@@ -68,7 +68,9 @@ class Worker(threading.Thread):
 								tf.convert_to_tensor(current_state,
 															 dtype=tf.float32))
 				probs = tf.nn.softmax(logits)
+				#print("Worker {}: probabilities {}".format(self.worker_idx,probs))
 				action = np.random.choice(self.action_size, p=probs.numpy()[0])
+				#print(action)
 				# print("ACTION: ", action)
 				#new_state, reward, done, _ = self.env.step(action)
 				new_state, reward, done = self.collect_states(action=action) # also trying this out here
